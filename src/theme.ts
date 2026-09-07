@@ -21,6 +21,8 @@ export const categoryColors: Record<string, [string, string]> = {
   wireless: ['#19D4FF', '#0A7FA8'],
   mapping: ['#FFB84D', '#C77A12'],
   positioning: ['#FF6EC7', '#B0287F'],
+  sensing: ['#7DF9FF', '#2A8FA8'],
+  energy: ['#FFE066', '#D19A00'],
 };
 
 export const spacing = { xs: 4, sm: 8, md: 12, lg: 16, xl: 24, xxl: 32 };

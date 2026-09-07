@@ -1,4 +1,4 @@
-export type Category = 'phone' | 'wearable' | 'wireless' | 'mapping' | 'positioning';
+export type Category = 'phone' | 'wearable' | 'wireless' | 'mapping' | 'positioning' | 'sensing' | 'energy';
 
 export type DeviceStatus = 'shipping' | 'preorder' | 'discontinued';
 
@@ -19,6 +19,20 @@ export interface Milestone {
   title: string;
 }
 
+export type AdoptionFactorKey = 'tenure' | 'installed' | 'reviews' | 'community' | 'trackRecord';
+export type AdoptionTier = 'established' | 'growing' | 'early' | 'new';
+
+export interface AdoptionFactor {
+  value: 0 | 1 | 2;
+  note: string; // the evidence behind the value, shown in-app
+}
+
+export interface Adoption {
+  factors: Record<AdoptionFactorKey, AdoptionFactor>;
+  evidence: string[]; // where to look: subreddits, YouTube search terms, explorers
+  asOf: string; // YYYY-MM
+}
+
 export interface Device {
   id: string;
   name: string;
@@ -35,6 +49,8 @@ export interface Device {
   icon: { set: IconSet; name: string };
   specs: Spec[];
   earn: string[]; // how the owner earns / participates
+  chainNote?: string; // e.g. multi-chain caveats
+  adoption: Adoption;
   seekerReady: boolean; // has an Android app usable on Seeker
   seekerNote?: string;
   highlights: string[];

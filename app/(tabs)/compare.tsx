@@ -7,8 +7,10 @@ import { devices, getDevice, categoryMeta } from '../../src/data/devices';
 import { colors, font, radius, spacing } from '../../src/theme';
 import { Card, GradientBadge, SectionTitle, tap } from '../../src/components/ui';
 import { MAX_COMPARE, useAppState } from '../../src/state/AppState';
+import { tierMeta } from '../../src/lib/adoption';
 
 const ROWS: { label: string; get: (d: ReturnType<typeof getDevice>) => string }[] = [
+  { label: 'Adoption', get: (d) => { const t = tierMeta(d!.adoption); return `${t.label} ${t.score}/10`; } },
   { label: 'Maker', get: (d) => d!.maker },
   { label: 'Category', get: (d) => categoryMeta[d!.category].label },
   { label: 'Price', get: (d) => d!.price },

@@ -10,8 +10,11 @@ import { colors, font, radius, spacing } from '../../src/theme';
 import { Chip, tap } from '../../src/components/ui';
 import { DeviceCard } from '../../src/components/DeviceCard';
 import { useAppState } from '../../src/state/AppState';
+import { TIER_META, scoreOf, tierOf } from '../../src/lib/adoption';
+import type { AdoptionTier } from '../../src/data/types';
 
-type Sort = 'featured' | 'newest' | 'price';
+type Sort = 'featured' | 'newest' | 'price' | 'adoption';
+const TIERS: AdoptionTier[] = ['established', 'growing', 'early', 'new'];
 const categories = Object.keys(categoryMeta) as Category[];
 
 function priceValue(p: string) {
@@ -27,20 +30,23 @@ export default function Explore() {
   const [cat, setCat] = useState<Category | 'all'>('all');
   const [sort, setSort] = useState<Sort>('featured');
   const [onlyFav, setOnlyFav] = useState(false);
+  const [tier, setTier] = useState<AdoptionTier | 'all'>('all');
 
   const list = useMemo(() => {
     const q = query.trim().toLowerCase();
     let out = devices.filter((d) => {
       if (cat !== 'all' && d.category !== cat) return false;
       if (onlyFav && !favorites.includes(d.id)) return false;
+      if (tier !== 'all' && tierOf(scoreOf(d.adoption)) !== tier) return false;
       if (!q) return true;
       const hay = [d.name, d.maker, d.tagline, d.token?.symbol ?? '', d.network, ...d.highlights].join(' ').toLowerCase();
       return hay.includes(q);
     });
     if (sort === 'newest') out = [...out].sort((a, b) => b.releaseYear - a.releaseYear);
     if (sort === 'price') out = [...out].sort((a, b) => priceValue(a.price) - priceValue(b.price));
+    if (sort === 'adoption') out = [...out].sort((a, b) => scoreOf(b.adoption) - scoreOf(a.adoption));
     return out;
-  }, [query, cat, sort, onlyFav, favorites]);
+  }, [query, cat, sort, onlyFav, favorites, tier]);
 
   const header = (
     <View>
@@ -54,7 +60,7 @@ export default function Explore() {
           <Text style={styles.heroEyebrow}>SOLANA DEPIN HARDWARE</Text>
           <Text style={styles.heroTitle}>Explore the physical side of Solana</Text>
           <Text style={styles.heroSub}>
-            Phones, rings, hotspots and dashcams that earn on-chain. {devices.length} devices across{' '}
+            Phones, rings, hotspots, sensors and dashcams that earn on-chain, each with an adoption-confidence score. {devices.length} devices across{' '}
             {categories.length} categories.
           </Text>
           <View style={styles.statRow}>
@@ -91,7 +97,7 @@ export default function Explore() {
 
       <View style={styles.sortRow}>
         <View style={{ flexDirection: 'row' }}>
-          {(['featured', 'newest', 'price'] as Sort[]).map((s) => (
+          {(['featured', 'adoption', 'newest', 'price'] as Sort[]).map((s) => (
             <Pressable
               key={s}
               onPress={() => {
@@ -101,7 +107,7 @@ export default function Explore() {
               style={[styles.sortBtn, sort === s && styles.sortBtnActive]}
             >
               <Text style={[styles.sortText, sort === s && { color: colors.text }]}>
-                {s === 'featured' ? 'Featured' : s === 'newest' ? 'Newest' : 'Price'}
+                {s === 'featured' ? 'Featured' : s === 'adoption' ? 'Adoption' : s === 'newest' ? 'Newest' : 'Price'}
               </Text>
             </Pressable>
           ))}
@@ -117,6 +123,13 @@ export default function Explore() {
           <Text style={[styles.sortText, { marginLeft: 4 }, onlyFav && { color: colors.text }]}>{favorites.length}</Text>
         </Pressable>
       </View>
+
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chips}>
+        <Chip label="Any adoption" active={tier === 'all'} onPress={() => setTier('all')} icon="chart-timeline-variant" />
+        {TIERS.map((t) => (
+          <Chip key={t} label={TIER_META[t].label} active={tier === t} onPress={() => setTier(t)} />
+        ))}
+      </ScrollView>
 
       {cat !== 'all' ? (
         <View style={styles.catBlurb}>

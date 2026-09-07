@@ -1,4 +1,5 @@
 import { Device } from './types';
+import { adoption } from './adoption';
 
 /**
  * Curated catalog of Solana-based physical hardware.
@@ -8,6 +9,7 @@ import { Device } from './types';
 export const devices: Device[] = [
   {
     id: 'solana-seeker',
+    adoption: adoption['solana-seeker'],
     name: 'Seeker',
     maker: 'Solana Mobile',
     category: 'phone',
@@ -52,6 +54,7 @@ export const devices: Device[] = [
   },
   {
     id: 'solana-saga',
+    adoption: adoption['solana-saga'],
     name: 'Saga',
     maker: 'Solana Mobile',
     category: 'phone',
@@ -91,6 +94,7 @@ export const devices: Device[] = [
   },
   {
     id: 'cudis-ring',
+    adoption: adoption['cudis-ring'],
     name: 'CUDIS Ring (Sporty Series)',
     maker: 'CUDIS',
     category: 'wearable',
@@ -131,6 +135,7 @@ export const devices: Device[] = [
   },
   {
     id: 'brusho',
+    adoption: adoption['brusho'],
     name: 'BrushO Smart Toothbrush',
     maker: 'BrushO',
     category: 'wearable',
@@ -138,10 +143,10 @@ export const devices: Device[] = [
     description:
       'BrushO is a sonic smart toothbrush with motion and pressure sensing that scores every brushing session in its companion app. Sessions are recorded as verifiable contributions to a Solana-based oral-health DePIN, earning the project\'s token for regular use. It targets the same "healthy habit = on-chain reward" loop as CUDIS, applied to two minutes twice a day.',
     status: 'shipping',
-    price: 'See vendor',
-    priceNote: 'Sold direct and through DePIN resellers such as Helium Deploy.',
+    price: '≈$150',
+    priceNote: 'Street price in late-2025 reviews; frequently discounted. Sold direct and via DePIN resellers.',
     releaseYear: 2025,
-    token: { symbol: 'BRUSH', role: 'Earned per verified brushing session' },
+    token: { symbol: 'BRUSH', role: 'In-app rewards per verified session; tradable token not confirmed — check vendor' },
     network: 'brusho',
     icon: { set: 'mci', name: 'toothbrush-electric' },
     specs: [
@@ -167,6 +172,7 @@ export const devices: Device[] = [
   },
   {
     id: 'helium-mobile-indoor',
+    adoption: adoption['helium-mobile-indoor'],
     name: 'Helium Mobile Hotspot (Indoor)',
     maker: 'Helium / Nova Labs',
     category: 'wireless',
@@ -204,6 +210,7 @@ export const devices: Device[] = [
   },
   {
     id: 'helium-mobile-outdoor',
+    adoption: adoption['helium-mobile-outdoor'],
     name: 'Helium Mobile Hotspot (Outdoor)',
     maker: 'Helium / Nova Labs',
     category: 'wireless',
@@ -238,6 +245,7 @@ export const devices: Device[] = [
   },
   {
     id: 'helium-iot-hotspot',
+    adoption: adoption['helium-iot-hotspot'],
     name: 'Helium IoT Hotspot (LoRaWAN)',
     maker: 'Various (RAK, SenseCAP, Bobcat…)',
     category: 'wireless',
@@ -273,6 +281,7 @@ export const devices: Device[] = [
   },
   {
     id: 'hivemapper-bee',
+    adoption: adoption['hivemapper-bee'],
     name: 'Bee (Hivemapper)',
     maker: 'Hivemapper / Bee Maps',
     category: 'mapping',
@@ -313,6 +322,7 @@ export const devices: Device[] = [
   },
   {
     id: 'geodnet-base-station',
+    adoption: adoption['geodnet-base-station'],
     name: 'GEODNET Triple-Band Base Station',
     maker: 'GEODNET (Hyfix)',
     category: 'positioning',
@@ -347,6 +357,7 @@ export const devices: Device[] = [
   },
   {
     id: 'xnet-radio',
+    adoption: adoption['xnet-radio'],
     name: 'XNET CBRS Radio',
     maker: 'XNET Mobile',
     category: 'wireless',
@@ -377,6 +388,241 @@ export const devices: Device[] = [
     ],
     links: [{ label: 'xnet.company', url: 'https://xnet.company/' }],
   },
+  {
+    id: 'weatherxm-d1',
+    adoption: adoption['weatherxm-d1'],
+    name: 'WeatherXM D1 Weather Station',
+    maker: 'WeatherXM',
+    category: 'sensing',
+    tagline: 'Rooftop weather station that sells hyperlocal forecasts',
+    description:
+      'WeatherXM stations measure temperature, humidity, pressure, wind, rain and UV, and stream it to a community weather network that sells forecasts and data to insurers, agriculture and energy customers. The D1 replaced the original M5 in 2024 and pairs a Wi‑Fi or 4G gateway with a solar-assisted sensor array. WeatherXM was the first weather app in the Solana dApp Store (Sept 2025) and $WXM has traded on Solana since mid-2025.',
+    status: 'shipping',
+    price: '$400',
+    priceNote: 'Wi‑Fi D1 bundle via Helium Deploy; 4G-LTE variant ≈$900. Check weatherxm.com/shop.',
+    releaseYear: 2024,
+    token: { symbol: 'WXM', role: 'Station rewards based on data quality and location' },
+    network: 'weatherxm',
+    chainNote: 'WXM originated as an ERC-20 on Arbitrum; it is bridged to Solana (Orca liquidity, Aug 2025) and the app ships in the Solana dApp Store. Not Solana-native.',
+    icon: { set: 'mci', name: 'weather-partly-cloudy' },
+    specs: [
+      { label: 'Sensors', value: 'Temp, humidity, pressure, wind speed/direction, rainfall, UV, solar radiation' },
+      { label: 'Gateway', value: 'WB1200 Wi‑Fi (D1) or 4G-LTE model' },
+      { label: 'Power', value: 'Solar + battery sensor array; gateway on mains' },
+      { label: 'Mount', value: 'Pole / roof mount included' },
+      { label: 'Data', value: 'Uploads every few minutes to the WeatherXM network' },
+    ],
+    earn: [
+      'Daily WXM rewards weighted by data quality (QoD) and cell location',
+      'Boosted rewards in cells with no existing station',
+      'Data sold to enterprise customers; rewards scale with demand',
+    ],
+    seekerReady: true,
+    seekerNote: 'WeatherXM app is listed in the Solana dApp Store; station owners see live data and rewards.',
+    highlights: ['In the Solana dApp Store', 'Solar sensor array', 'Data with real buyers', 'Multi-chain WXM'],
+    milestones: [
+      { date: '2022', title: 'First M5 stations ship' },
+      { date: '2024', title: 'D1 station replaces M5' },
+      { date: '2025-08', title: 'WXM liquidity on Solana (Orca)' },
+      { date: '2025-09', title: 'App launches in Solana dApp Store' },
+    ],
+    links: [
+      { label: 'weatherxm.com', url: 'https://weatherxm.com/shop/' },
+      { label: 'Docs', url: 'https://docs.weatherxm.com/' },
+    ],
+  },
+  {
+    id: 'wingbits-wb200',
+    adoption: adoption['wingbits-wb200'],
+    name: 'Wingbits WB200 ADS-B Station',
+    maker: 'Wingbits (HYFIX)',
+    category: 'sensing',
+    tagline: 'Track aircraft 250 miles out and earn WINGS for the data',
+    description:
+      'Wingbits builds a decentralized flight-tracking network from ADS-B receivers, the same 1090 MHz signals hobbyists feed to FlightAware. The WB200 is a weatherproof outdoor receiver with an amplified antenna; the MGW310 adds a triple-band GNSS receiver so one box also mines GEODNET. Data is sold to aviation and logistics customers, and station owners earn WINGS, which launched on Solana in April 2026.',
+    status: 'shipping',
+    price: 'From $475',
+    priceNote: 'WB200 via Helium Deploy; MGW310 dual Wingbits + GEODNET unit ≈$1,095.',
+    releaseYear: 2024,
+    token: { symbol: 'WINGS', role: 'Coverage and data rewards; TGE April 2026 on Solana' },
+    network: 'wingbits',
+    icon: { set: 'mci', name: 'airplane' },
+    specs: [
+      { label: 'Receiver', value: '1090 MHz ADS-B, amplified outdoor antenna' },
+      { label: 'Range', value: 'Up to ~250 miles with clear sky view' },
+      { label: 'Enclosure', value: 'Weatherproof, PoE / AC power' },
+      { label: 'Backhaul', value: 'Ethernet or Wi‑Fi; LTE optional' },
+      { label: 'Variant', value: 'MGW310: adds triple-band GNSS for GEODNET' },
+    ],
+    earn: [
+      'WINGS for verified aircraft messages, weighted toward under-covered airspace',
+      'Uptime and data-quality multipliers',
+      'MGW310 owners also earn GEOD',
+    ],
+    seekerReady: true,
+    seekerNote: 'Web dashboard plus Solana wallet; no dedicated Seeker app yet.',
+    highlights: ['250-mile range', 'Dual-mine with GEODNET', 'WINGS on Solana', 'Aviation data buyers'],
+    milestones: [
+      { date: '2023', title: 'Network opens to stations' },
+      { date: '2024', title: 'WB200 / MGW310 hardware ships' },
+      { date: '2026-04', title: 'Mainnet + WINGS TGE on Solana' },
+    ],
+    links: [
+      { label: 'wingbits.com', url: 'https://wingbits.com/stations/hardware' },
+      { label: 'Docs', url: 'https://docs.wingbits.com/' },
+    ],
+  },
+  {
+    id: 'onocoy-onolink',
+    adoption: adoption['onocoy-onolink'],
+    name: 'Onocoy Onolink GNSS Station',
+    maker: 'Onocoy',
+    category: 'positioning',
+    tagline: 'Plug-and-play RTK reference station for the onocoy network',
+    description:
+      'onocoy is a Swiss-founded GNSS correction network — a direct alternative to GEODNET. Stations stream raw satellite observations that let drones, robots and surveyors reach centimetre accuracy. Onolink is the plug-and-play option; DIY builders can use Bynav, u-blox or Septentrio receivers. Roughly 7,900 stations report from ~180 countries, and ONO lives on Solana.',
+    status: 'shipping',
+    price: '≈€399',
+    priceNote: 'Onolink bundle; DIY receivers from ≈€230. Prices from onocoy resellers.',
+    releaseYear: 2024,
+    token: { symbol: 'ONO', role: 'Station rewards; burned by RTK data customers' },
+    network: 'onocoy',
+    icon: { set: 'mci', name: 'satellite' },
+    specs: [
+      { label: 'Receiver', value: 'Multi-band GNSS (GPS, GLONASS, Galileo, BeiDou)' },
+      { label: 'Antenna', value: 'Outdoor survey-grade, clear sky view required' },
+      { label: 'Backhaul', value: 'Ethernet / Wi‑Fi, always-on' },
+      { label: 'Rewards rule', value: 'Top 3 stations within 15 km earn full rewards; >80% uptime required' },
+    ],
+    earn: [
+      'ONO rewards scaled by location — biggest multipliers in under-served regions',
+      'High-Value-Area campaigns pay temporary bonuses (up to 9× in 2026 Nordic campaign)',
+      'Rewards drop to zero below 80% availability',
+    ],
+    seekerReady: true,
+    seekerNote: 'Web console + Solana wallet.',
+    highlights: ['7,900 stations', '180 countries', 'GEODNET alternative', 'DIY-friendly'],
+    milestones: [
+      { date: '2023', title: 'Network launches' },
+      { date: '2024', title: 'ONO moves to Solana' },
+    ],
+    links: [{ label: 'onocoy.com', url: 'https://onocoy.com/' }],
+  },
+  {
+    id: 'roam-rainier-max60',
+    adoption: adoption['roam-rainier-max60'],
+    name: 'Roam Rainier MAX60 Router',
+    maker: 'Roam',
+    category: 'wireless',
+    tagline: 'Wi‑Fi 6 router that joins a 190-country OpenRoaming network',
+    description:
+      'Roam is a Solana-based decentralized Wi‑Fi network with millions of app users, strongest in Korea and Southeast Asia. The Rainier MAX60 is its flagship router: a Wi‑Fi 6 access point with OpenRoaming so any Roam user connects automatically, a CC EAL6+ secure element for device identity, and daily Roam Points that convert to ROAM.',
+    status: 'shipping',
+    price: '$499',
+    priceNote: 'MAX30 is the smaller model. Prices at shop.weroam.xyz.',
+    releaseYear: 2024,
+    token: { symbol: 'ROAM', role: 'Points-to-token rewards for uptime and visitors' },
+    network: 'roam',
+    icon: { set: 'mci', name: 'router-wireless' },
+    specs: [
+      { label: 'Wi‑Fi', value: 'Wi‑Fi 6, up to 9.6 Gbps, 200+ clients' },
+      { label: 'Coverage', value: '≈150 m²' },
+      { label: 'Security', value: 'CC EAL6+ secure chip, WPA2 / 802.1X, DID auth' },
+      { label: 'Roaming', value: 'OpenRoaming / Passpoint' },
+      { label: 'Warranty', value: '1 year' },
+    ],
+    earn: [
+      'Base 60 Roam Points/day for uptime, up to 240/day with visitor traffic',
+      'Activation airdrop bonus; points convert to ROAM',
+    ],
+    seekerReady: true,
+    seekerNote: 'Roam Android app; wallet sign-in supported.',
+    highlights: ['Wi‑Fi 6', 'OpenRoaming', 'Millions of app users', 'Secure element'],
+    milestones: [
+      { date: '2023', title: 'Roam network launches on Solana' },
+      { date: '2024', title: 'Rainier routers ship' },
+      { date: '2025', title: 'ROAM token launches' },
+    ],
+    links: [{ label: 'shop.weroam.xyz', url: 'https://shop.weroam.xyz/' }],
+  },
+  {
+    id: 'natix-vx360',
+    adoption: adoption['natix-vx360'],
+    name: 'NATIX VX360',
+    maker: 'NATIX Network',
+    category: 'mapping',
+    tagline: 'Plug into your Tesla and sell 360° dashcam footage for mapping',
+    description:
+      'VX360 is a 256 GB USB device that plugs into a Tesla\'s glovebox port, backs up the car\'s four-camera dashcam and Sentry footage to the phone app, and — with consent and on-device anonymisation — contributes drive data to NATIX\'s map and autonomous-driving datasets. Drivers earn NATIX on Solana, up to roughly $60/month equivalent per NATIX.',
+    status: 'shipping',
+    price: '$449',
+    priceNote: 'Was $349.99 at pre-order; bundles with cloud storage available.',
+    releaseYear: 2025,
+    token: { symbol: 'NATIX', role: 'Drive-data rewards; regular token burns' },
+    network: 'natix',
+    icon: { set: 'mci', name: 'car-electric' },
+    specs: [
+      { label: 'Compatibility', value: 'Tesla Model 3, Model Y, Model S / X (2021+), Cybertruck' },
+      { label: 'Storage', value: '256 GB (20+ hours of 4-camera video)' },
+      { label: 'Processor', value: 'ARM Cortex-A7 quad-core' },
+      { label: 'Privacy', value: 'On-device AI anonymisation before upload' },
+      { label: 'Install', value: 'Glovebox USB, no wiring' },
+    ],
+    earn: [
+      'NATIX per mile of contributed, anonymised 360° footage',
+      'Bonus regions where map data is in demand',
+      'Non-crypto perks (storage, Tesla accessories)',
+    ],
+    seekerReady: true,
+    seekerNote: 'NATIX Drive& Android app pairs with the device.',
+    highlights: ['Tesla-only', '360° footage', 'AI anonymisation', 'No wiring'],
+    milestones: [
+      { date: '2024-11', title: 'VX360 announced' },
+      { date: '2025', title: 'Shipping worldwide' },
+    ],
+    links: [
+      { label: 'natix.network', url: 'https://www.natix.network/vx360-depin-dashcam' },
+      { label: 'Shop', url: 'https://shop.natix.network/' },
+    ],
+  },
+  {
+    id: 'starpower-starplug',
+    adoption: adoption['starpower-starplug'],
+    name: 'Starpower Starplug',
+    maker: 'Starpower',
+    category: 'energy',
+    tagline: 'A $109 smart plug that meters your appliances and mines STAR',
+    description:
+      'Starpower is building a virtual power plant on Solana from consumer devices. The Starplug is an ESP32-based smart plug that reports appliance energy use, can be switched remotely, and earns STAR for contributing demand-response data. Starbattery and a home battery (GVP01) extend the same model to storage. Starpower reports 16,800+ activated devices in 780+ cities.',
+    status: 'shipping',
+    price: '$109',
+    priceNote: 'Via Starpower shop or DePIN resellers; ships to EU, US and APAC.',
+    releaseYear: 2024,
+    token: { symbol: 'STAR', role: 'App-driven mining for energy data and flexibility' },
+    network: 'starpower',
+    icon: { set: 'mci', name: 'power-plug' },
+    specs: [
+      { label: 'Chip', value: 'ESP32 dual-core, Bluetooth + 2.4 GHz Wi‑Fi' },
+      { label: 'Rating', value: '100–240 VAC, 13 A max, 1400 VA (110 V) / 2200 VA (220 V)' },
+      { label: 'Control', value: 'Remote relay on/off via app' },
+      { label: 'Family', value: 'Starplug · Starbattery · GVP01 home battery' },
+    ],
+    earn: [
+      'STAR accrues in the app for verified device uptime and energy data',
+      'Higher tiers for batteries that can shift load on request',
+    ],
+    seekerReady: true,
+    seekerNote: 'Starpower Android app; wallet linking for withdrawals.',
+    highlights: ['$109 entry', '16.8k devices', 'Energy DePIN', 'Battery roadmap'],
+    milestones: [
+      { date: '2024-03', title: 'Starplug launches' },
+      { date: '2025', title: 'Starbattery / home battery announced' },
+    ],
+    links: [
+      { label: 'Starpower shop', url: 'https://starpower-market.myshopify.com/products/starplug' },
+      { label: 'DePIN Scan', url: 'https://depinscan.io/projects/starpower' },
+    ],
+  },
 ];
 
 export const categoryMeta: Record<string, { label: string; icon: string; blurb: string }> = {
@@ -385,6 +631,8 @@ export const categoryMeta: Record<string, { label: string; icon: string; blurb: 
   wireless: { label: 'Wireless', icon: 'wifi', blurb: 'Hotspots and radios that sell coverage' },
   mapping: { label: 'Mapping', icon: 'map-marker-path', blurb: 'Cameras that build decentralized maps' },
   positioning: { label: 'Positioning', icon: 'crosshairs-gps', blurb: 'GNSS stations for centimetre RTK' },
+  sensing: { label: 'Sensing', icon: 'radar', blurb: 'Weather, aviation and vehicle sensors that sell data' },
+  energy: { label: 'Energy', icon: 'lightning-bolt', blurb: 'Plugs and batteries that meter and shift home power' },
 };
 
 export const getDevice = (id: string) => devices.find((d) => d.id === id);

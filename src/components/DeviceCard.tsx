@@ -5,6 +5,7 @@ import { Device } from '../data/types';
 import { colors, font, radius, spacing } from '../theme';
 import { GradientBadge, IconButton, StatusPill, TokenPill, tap } from './ui';
 import { useAppState } from '../state/AppState';
+import { AdoptionBadge, AdoptionBars } from './AdoptionBadge';
 
 export function DeviceCard({ device }: { device: Device }) {
   const router = useRouter();
@@ -35,9 +36,11 @@ export function DeviceCard({ device }: { device: Device }) {
       <Text style={styles.tagline} numberOfLines={2}>
         {device.tagline}
       </Text>
+      <AdoptionBars adoption={device.adoption} />
 
       <View style={styles.bottomRow}>
         <View style={{ flexDirection: 'row', flex: 1, flexWrap: 'wrap' }}>
+          <AdoptionBadge adoption={device.adoption} />
           <StatusPill status={device.status} />
           {device.token ? <TokenPill symbol={device.token.symbol} /> : null}
         </View>

@@ -16,6 +16,15 @@ export const ALLOWED_HOSTS: ReadonlySet<string> = new Set<string>([
   'docs.hivemapper.com',
   'geodnet.com',
   'xnet.company',
+  'weatherxm.com',
+  'docs.weatherxm.com',
+  'wingbits.com',
+  'docs.wingbits.com',
+  'onocoy.com',
+  'weroam.xyz',
+  'natix.network',
+  'starpower-market.myshopify.com',
+  'depinscan.io',
 ]);
 
 export function isAllowedUrl(raw: string): boolean {

@@ -40,6 +40,7 @@ export default function RootLayout() {
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="device/[id]" options={{ title: '', headerTransparent: true }} />
           <Stack.Screen name="legal/[doc]" options={{ title: 'Legal' }} />
+          <Stack.Screen name="methodology" options={{ title: 'Adoption confidence' }} />
           <Stack.Screen name="+not-found" options={{ title: 'Not found' }} />
         </Stack>
       </AppStateProvider>

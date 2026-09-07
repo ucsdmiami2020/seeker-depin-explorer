@@ -4,7 +4,8 @@ A modern, interactive field guide to the physical hardware that plugs into Solan
 
 **What's in v1 (catalog-only, no wallet required)**
 
-- 10 devices across 5 categories: Seeker, Saga, CUDIS Ring, BrushO toothbrush, Helium Mobile Indoor/Outdoor, Helium IoT (LoRaWAN), Hivemapper Bee, GEODNET base station, XNET CBRS radio
+- 16 devices across 7 categories: Seeker, Saga, CUDIS Ring, BrushO toothbrush, Helium Mobile Indoor/Outdoor, Helium IoT (LoRaWAN), Hivemapper Bee, GEODNET base station, XNET CBRS radio, WeatherXM D1, Wingbits WB200, onocoy Onolink, Roam Rainier MAX60, NATIX VX360, Starpower Starplug
+- **Adoption confidence score (0–10)** on every device — five evidence-based factors (tenure, installed base, independent reviews, community, reward track record) with the evidence shown in-app, a tier badge (Established / Growing / Early / Very new), sort + filter on Explore, a Compare row, and a methodology screen. Data lives in `src/data/adoption.ts`; rubric in `src/lib/adoption.ts`.
 - Explore tab: hero stats, search, category chips, Featured / Newest / Price sort, favourites filter
 - Device detail: gradient hero, price + release card, specs table, "How you earn", timeline, network card, vendor links, related devices, share sheet
 - Compare tab: pick up to 3 devices → side-by-side overview and aligned spec table
@@ -38,9 +39,12 @@ app/                     expo-router routes
   device/[id].tsx        Device detail screen
 src/
   data/devices.ts        ← the catalog. Add a device here and it appears everywhere.
+  data/adoption.ts       Adoption-confidence evidence per device (edit here to re-score)
   data/networks.ts       DePIN networks
   data/types.ts          Device / Network types
-  components/            DeviceCard + small UI primitives
+  components/            DeviceCard, AdoptionBadge/Panel + small UI primitives
+  lib/adoption.ts        Scoring rubric, tiers
+  lib/allowlist.ts       HTTPS host allow-list for outbound links
   state/AppState.tsx     Favourites + compare selection (in-memory)
   theme.ts               Colours, spacing, type scale
 ```

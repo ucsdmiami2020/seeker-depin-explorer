@@ -11,6 +11,7 @@ import { openExternal } from '../../src/lib/links';
 import { Bullet, Card, DeviceIcon, IconButton, SectionTitle, SpecRow, StatusPill, TokenPill, tap } from '../../src/components/ui';
 import { DeviceCard } from '../../src/components/DeviceCard';
 import { useAppState } from '../../src/state/AppState';
+import { AdoptionBadge, AdoptionPanel } from '../../src/components/AdoptionBadge';
 
 export default function DeviceDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -77,6 +78,7 @@ export default function DeviceDetail() {
           <Text style={styles.name}>{device.name}</Text>
           <Text style={styles.tagline}>{device.tagline}</Text>
           <View style={styles.pillRow}>
+            <AdoptionBadge adoption={device.adoption} />
             <StatusPill status={device.status} />
             {device.token ? <TokenPill symbol={device.token.symbol} /> : null}
             <View style={styles.catPill}>
@@ -108,8 +110,17 @@ export default function DeviceDetail() {
             ))}
           </View>
 
+          <SectionTitle>Adoption confidence</SectionTitle>
+          <AdoptionPanel adoption={device.adoption} />
+
           <SectionTitle>Overview</SectionTitle>
           <Text style={styles.body}>{device.description}</Text>
+          {device.chainNote ? (
+            <View style={[styles.note, { backgroundColor: '#FFB84D14' }]}>
+              <Ionicons name="git-network-outline" size={16} color={colors.warning} />
+              <Text style={styles.noteText}>{device.chainNote}</Text>
+            </View>
+          ) : null}
           {device.seekerNote ? (
             <View style={styles.note}>
               <Ionicons name="phone-portrait-outline" size={16} color={colors.solanaGreen} />

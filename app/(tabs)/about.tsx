@@ -37,6 +37,10 @@ export default function About() {
       <SectionTitle>How to read the catalog</SectionTitle>
       <Card>
         <Bullet>Prices are vendor list prices when this version shipped. Tap a vendor link for the live number.</Bullet>
+        <Bullet>
+          The Adoption confidence badge (0–10) measures how much independent, time-tested evidence exists — reviews,
+          communities, deployments, reward history — not product quality. Tap any badge for the method.
+        </Bullet>
         <Bullet>"Seeker-ready" means the device has an Android companion app or web console that works on Seeker.</Bullet>
         <Bullet>Token rewards vary with network demand and are never guaranteed. Nothing here is financial advice.</Bullet>
         <Bullet>Device icons are illustrative glyphs, not product imagery.</Bullet>
