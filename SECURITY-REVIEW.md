@@ -1,0 +1,79 @@
+# Security Review — Seeker DePIN Explorer v1.0.0 (versionCode 2)
+
+Reviewed 2026-09-07 against OWASP MASVS-L1 (mobile app security verification) and the Solana dApp Store publisher requirements. Scope: application code in `app/` and `src/`, Expo/Android build configuration, third-party dependencies, and the generated Android manifest.
+
+## Executive summary
+
+| Area | Before | After |
+|---|---|---|
+| Outbound links | `Linking.openURL()` on any string from catalog data | HTTPS-only host allow-list + Android Custom Tabs; 11 attack strings unit-tested |
+| Android manifest | `allowBackup=true` (Expo default); cleartext not pinned; dangerous permissions inherited from libraries | `allowBackup=false`, `usesCleartextTraffic=false`, only INTERNET + VIBRATE; 13 permissions force-removed with `tools:node="remove"` |
+| Release signing | Expo template signs *release* with the **debug keystore** → dApp Store rejection | Config plugin wires a real release keystore from `keystore.properties`/env; loud warning if missing |
+| Code shrinking | Off | R8/ProGuard + resource shrinking enabled for release |
+| Error handling | Red-box / crash on render error; default "Unmatched Route" page echoing the URL | Root `ErrorBoundary` (no stack in release), custom `+not-found`, hardened stale-deep-link state |
+| Legal / policy | None | In-app Privacy Policy, Terms/EULA, Copyright screen + hosted Markdown in `/docs`; reward disclaimers on every "How you earn" card |
+| Listing assets | Expo placeholder icon (icon-mismatch rejection risk) | Original icon set (adaptive + monochrome + 512 px store icon) and 1200×600 banner; 7 screenshots at 1080×2340 |
+| Secrets hygiene | — | `.gitignore` for keystores, `keystore.properties`, Solana keypairs; `android/` generated, not committed |
+| Dependencies | 2 transitive moderate advisories | Same 2 — analysed below, both accepted with rationale |
+
+Verification: `npx tsc --noEmit` clean · `npm test` (allow-list) 11/11 + 21/21 catalog URLs · `expo prebuild` manifest inspected · web export rendered headlessly, no runtime errors.
+
+## Attack surface
+
+The app is a static catalog. It has no backend, no accounts, no wallet code, no storage of user data, no WebView, and makes **zero network requests of its own**. The remaining surface is:
+
+1. **Deep links** (`seekerdepin://…`) — any app on the device can launch the exported `MainActivity` with an arbitrary path.
+2. **Outbound links** — URLs in the catalog data are handed to the OS.
+3. **Supply chain** — Expo/React Native dependency tree.
+4. **Build & distribution** — APK signing, debuggability, backup.
+
+## Findings and remediation
+
+### 1. Outbound URLs handed straight to `Linking.openURL` — Medium → Fixed
+`Linking.openURL(url)` will open *any* scheme the string resolves to (`intent://`, `javascript:` on web, custom schemes that other apps register). The URLs are static today, but the catalog is designed to be edited, and an `intent://` string in a data file would become an intent launched from a trusted app.
+
+**Fix:** `src/lib/allowlist.ts` validates with the WHATWG `URL` parser: `https:` only, no embedded credentials, hostname must equal or be a subdomain of an explicit allow-list (suffix-spoofs like `helium.com.evil.io` rejected). `src/lib/links.ts` then opens through `expo-web-browser` (Android Custom Tabs) so the user stays in-app, sees the real URL bar, and the page runs in Chrome's sandbox, not a WebView with app privileges. Non-conforming URLs are silently dropped (dev-only console warning). Unit tests in `src/lib/__tests__/allowlist.test.ts` also assert every catalog URL is allow-listed, so a typo fails `npm test` rather than silently breaking a link.
+
+### 2. Android backup enabled — Medium → Fixed
+Expo defaults `android:allowBackup="true"`. The app stores nothing today, but backup would silently include any future persisted state (e.g. wallet address cache) in Google backups and `adb backup` on older devices. Set `"allowBackup": false` in `app.json`; confirmed in the generated manifest.
+
+### 3. Cleartext traffic not explicitly denied — Low → Fixed
+`expo-build-properties` → `usesCleartextTraffic: false` so no `http://` request can ever succeed from the app process, even if a dependency tries.
+
+### 4. Inherited permissions — Low → Fixed
+Libraries in the RN/Expo tree merge permissions such as `SYSTEM_ALERT_WINDOW` (dev-client overlay), `READ_EXTERNAL_STORAGE`, `READ_PHONE_STATE`. Reviewers and users see these. `blockedPermissions` removes 13 of them at manifest-merge time; the final manifest carries only `INTERNET` and `VIBRATE` (haptics). If you later add MWA, it needs nothing extra — it works over intents.
+
+### 5. Release APK signed with debug keystore — High (for store submission) → Fixed
+Expo's Gradle template sets `release { signingConfig signingConfigs.debug }`. A debug-signed APK is a documented dApp Store rejection, and the debug key is public. `plugins/withReleaseSigning.js` injects a `release` signing config that reads `android/keystore.properties` (git-ignored) or `DAPP_STORE_*` env vars, enables v1+v2 signing, and prints a warning if none is configured. EAS builds (`dapp-store` profile) manage their own keystore and are unaffected.
+
+### 6. No error boundary; default not-found echoes the URL — Low → Fixed
+An uncaught render error in release RN crashes the app; the stock unmatched-route screen prints the incoming URL, which for a deep link is attacker-controlled text rendered inside a trusted app. Added a root `ErrorBoundary` (stack shown only when `__DEV__`), a custom `+not-found.tsx` that never echoes the path, and a proper recovery state in `device/[id]` for unknown ids (`router.replace('/')`).
+
+### 7. R8/ProGuard off — Low → Fixed
+`enableProguardInReleaseBuilds` and `enableShrinkResourcesInReleaseBuilds` enabled. Reduces APK size and strips unused code paths; not a security control on its own, but standard for release.
+
+### 8. Dependencies — 2 moderate advisories, accepted
+`npm audit --omit=dev` reports 14 entries that collapse to two root causes:
+
+- **`decode-uri-component@0.2.2`** (GHSA-vcc3-ghjq-m6fr, DoS via exponential decoding) via `expo-router → query-string@7`. Reachable only when the router parses a query string from an incoming deep link. Impact is bounded to local CPU time in our own process (no server, no data), and the app reads no query parameters. The patched release (0.5.0) is ESM-only and cannot be substituted under `query-string@7`'s CommonJS `require` without breaking Metro; the fix arrives with the next expo-router major. **Accepted; re-check on each SDK upgrade.**
+- **`uuid@7.0.3`** (GHSA-w5hq-g745-h8pq) via `@expo/config-plugins → xcode`. Build-time only, iOS project generation, never bundled into the APK. **Accepted.**
+
+Runtime bundle contains no other flagged packages. Re-run `npm run audit` before each release.
+
+### 9. Things reviewed and found acceptable
+- No `console.log`, `eval`, `dangerouslySetInnerHTML`, WebView, or dynamic code loading in app code.
+- `Share.share` payload is composed from static catalog strings only.
+- Search input is used solely for in-memory `includes()` filtering — no injection surface.
+- `useLocalSearchParams` values are coerced with `String()` and looked up by exact id; unknown → not-found state.
+- `scheme: seekerdepin` intent filter has `BROWSABLE` (required by expo-router); the activity is exported by necessity. Because the app holds no secrets and performs no privileged actions, deep-link abuse is limited to opening a screen.
+- `predictiveBackGestureEnabled: true` and `enableOnBackInvokedCallback` — required for Android 14+ back-gesture correctness on Seeker.
+- Haptics wrapped in `.catch(() => {})` so a missing vibrator never throws.
+- `expo-updates` is not installed → `expo.modules.updates.ENABLED=false`; the APK cannot fetch remote JS. (If you add OTA updates later, dApp Store policy requires the reviewed build's behaviour not change materially via OTA.)
+
+## Residual risks and recommendations
+
+1. **When wallet support is added (v2):** keep all signing inside MWA `transact()`; never request `signMessage` for anything other than SIWS-style auth; show exactly what will be signed; never persist the auth token unencrypted (use `expo-secure-store`).
+2. **Pin the allow-list in CI:** `npm test` already fails on non-allow-listed catalog URLs; add it to your pre-commit or CI.
+3. **Keystore custody:** store the release `.jks` and passwords in a password manager / HSM-backed secret store; the dApp Store cannot re-key a listing.
+4. **Solana publisher keypair:** anyone holding it can publish releases under your name. Keep it offline; consider a dedicated hardware-backed key.
+5. **SDK cadence:** Expo SDK 57 targets API 36. Re-run `npm run audit` and `expo prebuild` after each SDK bump and diff the manifest.

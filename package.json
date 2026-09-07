@@ -5,6 +5,7 @@
   "dependencies": {
     "@expo/vector-icons": "^15.1.1",
     "expo": "~57.0.20",
+    "expo-build-properties": "~57.0.17",
     "expo-constants": "~57.0.17",
     "expo-font": "~57.0.3",
     "expo-haptics": "~57.0.2",
@@ -14,6 +15,7 @@
     "expo-splash-screen": "~57.0.8",
     "expo-status-bar": "~57.0.1",
     "expo-system-ui": "~57.0.3",
+    "expo-web-browser": "~57.0.2",
     "react": "19.2.3",
     "react-dom": "^19.2.3",
     "react-native": "0.86.3",
@@ -23,13 +25,18 @@
   },
   "devDependencies": {
     "@types/react": "~19.2.2",
+    "tsx": "^4.23.13",
     "typescript": "~6.0.3"
   },
   "scripts": {
     "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web"
+    "android": "expo run:android",
+    "ios": "expo run:ios",
+    "typecheck": "tsc --noEmit",
+    "audit": "npm audit --omit=dev",
+    "prebuild:android": "expo prebuild --platform android --clean",
+    "web": "expo start --web",
+    "test": "tsx src/lib/__tests__/allowlist.test.ts"
   },
   "private": true
 }

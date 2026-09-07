@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Linking, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { networks } from '../../src/data/networks';
 import { devices } from '../../src/data/devices';
 import { colors, font, radius, spacing } from '../../src/theme';
+import { openExternal } from '../../src/lib/links';
 import { Card, GradientBadge, TokenPill, tap } from '../../src/components/ui';
 
 export default function Networks() {
@@ -73,7 +74,7 @@ export default function Networks() {
                 ) : null}
                 <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginTop: spacing.md }}>
                   {n.links.map((l) => (
-                    <Pressable key={l.url} onPress={() => Linking.openURL(l.url)} style={styles.link}>
+                    <Pressable key={l.url} onPress={() => openExternal(l.url)} style={styles.link}>
                       <Ionicons name="open-outline" size={14} color={colors.solanaBlue} />
                       <Text style={styles.linkText}>{l.label}</Text>
                     </Pressable>

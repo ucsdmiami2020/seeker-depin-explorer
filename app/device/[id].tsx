@@ -1,5 +1,5 @@
 import React from 'react';
-import { Linking, Pressable, ScrollView, Share, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, Share, StyleSheet, Text, View } from 'react-native';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
@@ -7,6 +7,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { devices, getDevice, categoryMeta } from '../../src/data/devices';
 import { getNetwork } from '../../src/data/networks';
 import { categoryColors, colors, font, radius, spacing } from '../../src/theme';
+import { openExternal } from '../../src/lib/links';
 import { Bullet, Card, DeviceIcon, IconButton, SectionTitle, SpecRow, StatusPill, TokenPill, tap } from '../../src/components/ui';
 import { DeviceCard } from '../../src/components/DeviceCard';
 import { useAppState } from '../../src/state/AppState';
@@ -19,9 +20,16 @@ export default function DeviceDetail() {
   const { isFavorite, toggleFavorite, isCompared, toggleCompare } = useAppState();
 
   if (!device) {
+    // Reached via a stale deep link (seekerdepin://device/<unknown>) or a removed catalog entry.
     return (
       <View style={styles.missing}>
-        <Text style={{ color: colors.text }}>Device not found.</Text>
+        <Stack.Screen options={{ title: 'Not found', headerTransparent: false }} />
+        <Ionicons name="hardware-chip-outline" size={40} color={colors.textFaint} />
+        <Text style={styles.missingTitle}>Device not found</Text>
+        <Text style={styles.missingBody}>That link doesn't match anything in the catalog.</Text>
+        <Pressable onPress={() => router.replace('/')} style={styles.missingBtn}>
+          <Text style={styles.missingBtnText}>Back to Explore</Text>
+        </Pressable>
       </View>
     );
   }
@@ -129,6 +137,13 @@ export default function DeviceDetail() {
             {device.earn.map((e) => (
               <Bullet key={e}>{e}</Bullet>
             ))}
+            <View style={styles.disclaimer}>
+              <Ionicons name="information-circle-outline" size={14} color={colors.textFaint} />
+              <Text style={styles.disclaimerText}>
+                Rewards depend on network demand, location and token price, and are not guaranteed. This is
+                informational only — not financial advice, and not an offer to sell hardware or tokens.
+              </Text>
+            </View>
           </Card>
 
           <SectionTitle>Timeline</SectionTitle>
@@ -170,7 +185,7 @@ export default function DeviceDetail() {
           <SectionTitle>Links</SectionTitle>
           <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
             {device.links.map((l) => (
-              <Pressable key={l.url} onPress={() => Linking.openURL(l.url)} style={styles.link}>
+              <Pressable key={l.url} onPress={() => openExternal(l.url)} style={styles.link}>
                 <Ionicons name="open-outline" size={15} color={colors.solanaBlue} />
                 <Text style={styles.linkText}>{l.label}</Text>
               </Pressable>
@@ -192,7 +207,13 @@ export default function DeviceDetail() {
 }
 
 const styles = StyleSheet.create({
-  missing: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.bg },
+  missing: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.bg, padding: spacing.xl },
+  missingTitle: { ...font.title, color: colors.text, marginTop: spacing.md },
+  missingBody: { ...font.body, color: colors.textMuted, marginTop: 6, textAlign: 'center' },
+  missingBtn: { marginTop: spacing.xl, backgroundColor: colors.solanaGreen, borderRadius: 999, paddingHorizontal: 20, paddingVertical: 12 },
+  missingBtnText: { color: '#0B0B12', fontWeight: '800' },
+  disclaimer: { flexDirection: 'row', alignItems: 'flex-start', marginTop: spacing.sm, paddingTop: spacing.sm, borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: colors.cardBorder },
+  disclaimerText: { ...font.caption, color: colors.textFaint, marginLeft: 6, flex: 1, lineHeight: 16, fontWeight: '400' },
   hero: { paddingHorizontal: spacing.lg, paddingBottom: spacing.xl },
   heroIcon: {
     width: 104,

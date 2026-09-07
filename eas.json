@@ -1,5 +1,5 @@
 {
-  "cli": { "version": ">= 16.0.0" },
+  "cli": { "version": ">= 16.0.0", "appVersionSource": "local" },
   "build": {
     "development": {
       "developmentClient": true,
@@ -10,8 +10,16 @@
       "distribution": "internal",
       "android": { "buildType": "apk" }
     },
+    "dapp-store": {
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk",
+        "gradleCommand": ":app:assembleRelease"
+      },
+      "env": { "APP_VARIANT": "dapp-store" }
+    },
     "production": {
-      "android": { "buildType": "apk" }
+      "extends": "dapp-store"
     }
   }
 }

@@ -51,6 +51,16 @@ Append an object to `src/data/devices.ts` that satisfies the `Device` type. Icon
 `@expo/vector-icons` (`MaterialCommunityIcons` or `Ionicons`) — no product imagery is bundled, on purpose.
 Prices are strings; the Explore "Price" sort parses the first `$number` it finds.
 
+## Security & store readiness
+
+- `SECURITY-REVIEW.md` — findings, fixes and accepted risks (MASVS-L1 oriented).
+- `docs/DAPP_STORE_SUBMISSION.md` — step-by-step checklist, listing copy, asset table.
+- `store-assets/` — 512 px icon, 1200×600 banner, seven 1080×2340 screenshots.
+- `docs/privacy-policy.md`, `docs/terms-of-use.md`, `docs/copyright.md` — host these (GitHub Pages is fine) and paste the URLs into the publisher portal. Fill in `PUBLISHER` in `src/data/legal.ts` first.
+- `npm test` runs the outbound-link allow-list tests; `npm run audit` checks runtime dependencies.
+
+Hardening applied: HTTPS-only host allow-list + Custom Tabs for every external link, `allowBackup=false`, `usesCleartextTraffic=false`, only INTERNET + VIBRATE permissions, R8/resource shrinking, real release signing via `plugins/withReleaseSigning.js`, root error boundary, custom not-found route, in-app legal screens and reward disclaimers.
+
 ## Building a signed APK for the Solana dApp Store
 
 The dApp Store wants a release APK signed with **your** keystore (not Play App Signing).
@@ -58,17 +68,19 @@ The dApp Store wants a release APK signed with **your** keystore (not Play App S
 **Option A — local Gradle build**
 
 ```bash
-npx expo prebuild --platform android          # generates android/
-# put your keystore in android/app/ and add signingConfigs.release to android/app/build.gradle
+npx expo prebuild --platform android --clean   # generates android/ (git-ignored)
+cp keystore.properties.example android/keystore.properties && $EDITOR android/keystore.properties
 cd android && ./gradlew assembleRelease
 # → android/app/build/outputs/apk/release/app-release.apk
+apksigner verify --print-certs app/build/outputs/apk/release/app-release.apk   # must NOT say CN=Android Debug
 ```
+`plugins/withReleaseSigning.js` wires the keystore into the release build type; without it Expo's template would sign the release APK with the debug key, which the dApp Store rejects.
 
 **Option B — EAS Build** (config in `eas.json`, all profiles output `.apk`)
 
 ```bash
 npm i -g eas-cli && eas login
-eas build -p android --profile production
+eas build -p android --profile dapp-store
 ```
 
 Then follow Solana Mobile's publishing flow:
@@ -105,5 +117,5 @@ Specs and prices were gathered from vendor sites and press coverage in September
 ## Tooling notes
 
 - Expo SDK 57 · React Native 0.86 · React 19 · expo-router 57 · TypeScript strict
-- `npx tsc --noEmit` passes clean.
+- `npm run typecheck` (tsc strict) and `npm test` pass clean; `expo prebuild` manifest verified.
 - `npx expo export --platform web` produces a static site; a React hydration notice (#418) can appear in the browser console from safe-area insets during static hydration — it does not affect Android.

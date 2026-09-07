@@ -1,9 +1,11 @@
 import React from 'react';
-import { Linking, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import Constants from 'expo-constants';
+import { Link } from 'expo-router';
 import { colors, font, spacing } from '../../src/theme';
+import { openExternal } from '../../src/lib/links';
 import { Bullet, Card, SectionTitle } from '../../src/components/ui';
 
 const ROADMAP = [
@@ -38,6 +40,7 @@ export default function About() {
         <Bullet>"Seeker-ready" means the device has an Android companion app or web console that works on Seeker.</Bullet>
         <Bullet>Token rewards vary with network demand and are never guaranteed. Nothing here is financial advice.</Bullet>
         <Bullet>Device icons are illustrative glyphs, not product imagery.</Bullet>
+        <Bullet>The app collects no data and makes no network requests of its own; links open in your browser.</Bullet>
       </Card>
 
       <SectionTitle>Roadmap</SectionTitle>
@@ -47,13 +50,32 @@ export default function About() {
         ))}
       </Card>
 
+      <SectionTitle>Legal</SectionTitle>
+      <Card>
+        {(
+          [
+            ['privacy', 'Privacy policy', 'shield-checkmark-outline'],
+            ['terms', 'Terms of use & EULA', 'document-text-outline'],
+            ['copyright', 'Copyright & attribution', 'ribbon-outline'],
+          ] as const
+        ).map(([id, label, icon]) => (
+          <Link key={id} href={`/legal/${id}`} asChild>
+            <Pressable style={styles.linkRow} accessibilityRole="link">
+              <Ionicons name={icon} size={18} color={colors.solanaBlue} />
+              <Text style={styles.linkText}>{label}</Text>
+              <Ionicons name="chevron-forward" size={16} color={colors.textFaint} style={{ marginLeft: 'auto' }} />
+            </Pressable>
+          </Link>
+        ))}
+      </Card>
+
       <SectionTitle>Build with Solana Mobile</SectionTitle>
       <Card>
-        <Pressable style={styles.linkRow} onPress={() => Linking.openURL('https://docs.solanamobile.com/')}>
+        <Pressable style={styles.linkRow} onPress={() => openExternal('https://docs.solanamobile.com/')}>
           <Ionicons name="book-outline" size={18} color={colors.solanaBlue} />
           <Text style={styles.linkText}>docs.solanamobile.com</Text>
         </Pressable>
-        <Pressable style={styles.linkRow} onPress={() => Linking.openURL('https://github.com/solana-mobile')}>
+        <Pressable style={styles.linkRow} onPress={() => openExternal('https://github.com/solana-mobile')}>
           <Ionicons name="logo-github" size={18} color={colors.solanaBlue} />
           <Text style={styles.linkText}>github.com/solana-mobile</Text>
         </Pressable>
