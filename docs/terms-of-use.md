@@ -1,10 +1,10 @@
 # Terms of Use & EULA
 
-_Last updated 2026-09-07_
+_Last updated 2026-09-11_
 
 ## Licence
 
-<Your publisher / company name> grants you a personal, non-exclusive, non-transferable, revocable licence to install and use Seeker DePIN Explorer on Android devices you own or control, for informational purposes, subject to these terms and the Solana dApp Store Terms of Use.
+Bobby Fisher grants you a personal, non-exclusive, non-transferable, revocable licence to install and use Seeker DePIN Explorer on Android devices you own or control, for informational purposes, subject to these terms and the Solana dApp Store Terms of Use.
 
 ## Informational content only
 
@@ -31,4 +31,4 @@ To the maximum extent permitted by law, the app is provided without warranties o
 We may update the app or these terms at any time. Continued use after an update constitutes acceptance. You may stop using the app at any time by uninstalling it.
 
 ---
-<Your publisher / company name> · <contact@yourdomain.com> · <https://yourdomain.com>
+Bobby Fisher · rchac005@gmail.com · <https://yourdomain.com>

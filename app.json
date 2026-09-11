@@ -73,7 +73,8 @@
           }
         }
       ],
-      "./plugins/withReleaseSigning.js"
+      "./plugins/withReleaseSigning.js",
+      "expo-splash-screen"
     ],
     "experiments": {
       "typedRoutes": true

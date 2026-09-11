@@ -28,7 +28,7 @@ export default function DeviceDetail() {
         <Ionicons name="hardware-chip-outline" size={40} color={colors.textFaint} />
         <Text style={styles.missingTitle}>Device not found</Text>
         <Text style={styles.missingBody}>That link doesn't match anything in the catalog.</Text>
-        <Pressable onPress={() => router.replace('/')} style={styles.missingBtn}>
+        <Pressable onPress={() => router.replace('/(tabs)')} style={styles.missingBtn}>
           <Text style={styles.missingBtnText}>Back to Explore</Text>
         </Pressable>
       </View>

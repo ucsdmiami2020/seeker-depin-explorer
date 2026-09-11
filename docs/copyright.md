@@ -1,14 +1,14 @@
 # Copyright & Attribution
 
-_Last updated 2026-09-07_
+_Last updated 2026-09-11_
 
 ## Copyright
 
-© 2026 <Your publisher / company name>. Application code and original editorial content are licensed under Apache 2.0 unless stated otherwise in the repository.
+© 2026 Bobby Fisher. All rights reserved. Application code and original editorial content may not be copied, modified or redistributed without written permission. Third-party open-source components remain under their own licences.
 
 ## Trademarks
 
-Solana, Solana Mobile, Saga, Seeker, Seed Vault, CUDIS, BrushO, Helium, Hivemapper, Bee Maps, GEODNET and XNET are trademarks of their respective owners. The app uses these names nominatively to identify products and does not imply endorsement.
+Solana, Solana Mobile, Saga, Seeker, Seed Vault, CUDIS, BrushO, Helium, Nova Labs, RAKwireless, SenseCAP, Bobcat, Hivemapper, Bee Maps, GEODNET, Hyfix, XNET, WeatherXM, Wingbits, onocoy, Roam, NATIX and Starpower are trademarks of their respective owners. The app uses these names nominatively to identify products and does not imply endorsement.
 
 ## Imagery and icons
 
@@ -16,7 +16,7 @@ The app intentionally contains no vendor product photography or logos. Device an
 
 ## Takedown
 
-If you believe content in the app infringes your rights, contact <contact@yourdomain.com> with the item, your claim and your contact details, and we will respond promptly.
+If you believe content in the app infringes your rights, contact rchac005@gmail.com with the item, your claim and your contact details, and we will respond promptly.
 
 ---
-<Your publisher / company name> · <contact@yourdomain.com> · <https://yourdomain.com>
+Bobby Fisher · rchac005@gmail.com · <https://yourdomain.com>

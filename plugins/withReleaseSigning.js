@@ -2,7 +2,7 @@
  * Expo config plugin: adds a real `release` signingConfig to android/app/build.gradle.
  *
  * Reads credentials from android/keystore.properties (git-ignored) with keys:
- *   storeFile=../keystores/dapp-store-release.jks   (relative to android/app)
+ *   storeFile=../../keystores/dapp-store-release.jks   (relative to android/app)
  *   storePassword=...
  *   keyAlias=...
  *   keyPassword=...
@@ -55,11 +55,22 @@ module.exports = function withReleaseSigning(config) {
         `${indent}}\n`,
     );
 
-    // 3) point buildTypes.release at it
+    // 3) point buildTypes.release at it. Anchored on `buildTypes {` so the match can't start at the
+    //    signingConfigs.release block inserted above and rewrite buildTypes.debug instead.
     s = s.replace(
-      /(release \{[\s\S]*?)signingConfig signingConfigs\.debug/,
+      /(buildTypes \{[\s\S]*?release \{[\s\S]*?)signingConfig signingConfigs\.debug/,
       '$1signingConfig hasReleaseSigning ? signingConfigs.release : signingConfigs.debug',
     );
+
+    // Fail prebuild rather than silently shipping a debug-signed release if the template changes.
+    const buildTypes = s.slice(s.indexOf('buildTypes {'));
+    const wired =
+      s.includes('def hasReleaseSigning') &&
+      s.includes('if (hasReleaseSigning) {') &&
+      /release \{[^}]*signingConfig hasReleaseSigning/.test(buildTypes);
+    if (!wired) {
+      throw new Error('[withReleaseSigning] Could not wire the release signingConfig into buildTypes.release; the build.gradle template has changed.');
+    }
     cfg.modResults.contents = s;
     return cfg;
   });

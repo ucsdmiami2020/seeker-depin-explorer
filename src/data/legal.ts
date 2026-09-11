@@ -5,10 +5,10 @@
  * filled before submission.
  */
 export const PUBLISHER = {
-  name: '<Your publisher / company name>',
-  contactEmail: '<contact@yourdomain.com>',
+  name: 'Bobby Fisher',
+  contactEmail: 'rchac005@gmail.com',
   website: '<https://yourdomain.com>',
-  lastUpdated: '2026-09-07',
+  lastUpdated: '2026-09-11',
 };
 
 export type LegalDocId = 'privacy' | 'terms' | 'copyright';
@@ -103,12 +103,12 @@ export const legalDocs: Record<LegalDocId, LegalDoc> = {
     sections: [
       {
         heading: 'Copyright',
-        body: `© ${new Date().getFullYear()} ${PUBLISHER.name}. Application code and original editorial content are licensed under Apache 2.0 unless stated otherwise in the repository.`,
+        body: `© ${new Date().getFullYear()} ${PUBLISHER.name}. All rights reserved. Application code and original editorial content may not be copied, modified or redistributed without written permission. Third-party open-source components remain under their own licences.`,
       },
       {
         heading: 'Trademarks',
         body:
-          'Solana, Solana Mobile, Saga, Seeker, Seed Vault, CUDIS, BrushO, Helium, Hivemapper, Bee Maps, GEODNET and XNET are trademarks of their respective owners. The app uses these names nominatively to identify products and does not imply endorsement.',
+          'Solana, Solana Mobile, Saga, Seeker, Seed Vault, CUDIS, BrushO, Helium, Nova Labs, RAKwireless, SenseCAP, Bobcat, Hivemapper, Bee Maps, GEODNET, Hyfix, XNET, WeatherXM, Wingbits, onocoy, Roam, NATIX and Starpower are trademarks of their respective owners. The app uses these names nominatively to identify products and does not imply endorsement.',
       },
       {
         heading: 'Imagery and icons',

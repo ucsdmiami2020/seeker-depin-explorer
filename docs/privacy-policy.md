@@ -1,6 +1,6 @@
 # Privacy Policy
 
-_Last updated 2026-09-07_
+_Last updated 2026-09-11_
 
 ## Summary
 
@@ -28,7 +28,7 @@ The app is informational and suitable for general audiences. It is not directed 
 
 ## Changes and contact
 
-We will update this policy if the app's data practices change, and note the date above. Questions: <contact@yourdomain.com>.
+We will update this policy if the app's data practices change, and note the date above. Questions: rchac005@gmail.com.
 
 ---
-<Your publisher / company name> · <contact@yourdomain.com> · <https://yourdomain.com>
+Bobby Fisher · rchac005@gmail.com · <https://yourdomain.com>

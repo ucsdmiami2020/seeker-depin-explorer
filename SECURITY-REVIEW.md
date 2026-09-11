@@ -46,6 +46,8 @@ Libraries in the RN/Expo tree merge permissions such as `SYSTEM_ALERT_WINDOW` (d
 ### 5. Release APK signed with debug keystore — High (for store submission) → Fixed
 Expo's Gradle template sets `release { signingConfig signingConfigs.debug }`. A debug-signed APK is a documented dApp Store rejection, and the debug key is public. `plugins/withReleaseSigning.js` injects a `release` signing config that reads `android/keystore.properties` (git-ignored) or `DAPP_STORE_*` env vars, enables v1+v2 signing, and prints a warning if none is configured. EAS builds (`dapp-store` profile) manage their own keystore and are unaffected.
 
+**Correction (2026-09-11):** the original step-3 regex started matching at the `signingConfigs.release` block the plugin had just inserted, so it rewired `buildTypes.debug` and left `buildTypes.release` on the debug keystore — reproduced by running the plugin against the SDK 57 `build.gradle` template. The match is now anchored on `buildTypes {`, and prebuild throws if `buildTypes.release` does not end up pointing at the release config. Always confirm with `apksigner verify --print-certs` before uploading.
+
 ### 6. No error boundary; default not-found echoes the URL — Low → Fixed
 An uncaught render error in release RN crashes the app; the stock unmatched-route screen prints the incoming URL, which for a deep link is attacker-controlled text rendered inside a trusted app. Added a root `ErrorBoundary` (stack shown only when `__DEV__`), a custom `+not-found.tsx` that never echoes the path, and a proper recovery state in `device/[id]` for unknown ids (`router.replace('/')`).
 

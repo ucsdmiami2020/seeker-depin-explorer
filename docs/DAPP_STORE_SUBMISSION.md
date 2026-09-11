@@ -1,71 +1,91 @@
 # Solana dApp Store submission checklist
 
 Everything below maps to a documented requirement or a known rejection reason. Tick them in order.
+Reference: [Submit a New App](https://docs.solanamobile.com/dapp-store/submit-new-app) · [Build and Sign an APK](https://docs.solanamobile.com/dapp-store/build-and-sign-an-apk) · [Publisher Policy](https://legal.solanamobile.com/publisher-policy-web)
 
 ## A. One-time setup
 
-- [ ] **Fill in publisher identity** in `src/data/legal.ts` (`PUBLISHER.name`, `contactEmail`, `website`). Re-generate `/docs/*.md` if you change wording (they mirror the in-app screens).
-- [ ] **Host the three legal documents** at public HTTPS URLs (GitHub Pages of this repo works: `docs/privacy-policy.md`, `docs/terms-of-use.md`, `docs/copyright.md`). The portal asks for Privacy Policy, EULA/Terms and Copyright URLs.
+- [x] **Publisher identity** in `src/data/legal.ts` (`PUBLISHER.name`, `contactEmail`) — Bobby Fisher · rchac005@gmail.com. `/docs/*.md` mirror the in-app screens; keep them in sync if you change wording.
+- [ ] **Website**: set `PUBLISHER.website` and the footers of `docs/*.md` to the GitHub Pages URL once the repo is published.
+- [ ] **Host the three legal documents** at public HTTPS URLs (GitHub Pages from `docs/`: `privacy-policy`, `terms-of-use`, `copyright`). The portal asks for Privacy Policy, EULA/Terms and Copyright URLs.
 - [ ] **Choose the final Android package id** in `app.json` (`android.package`). It is permanent once the App NFT is minted and must match the APK on every update.
-- [ ] **Generate a dedicated release keystore** (never reuse a Google Play key):
-  ```bash
-  mkdir -p keystores
-  keytool -genkeypair -v -storetype PKCS12 -keystore keystores/dapp-store-release.jks \
-    -alias dappstore -keyalg RSA -keysize 4096 -validity 10000
-  ```
-  Back it up somewhere durable. Copy `keystore.properties.example` → `android/keystore.properties` after prebuild and fill it in (git-ignored).
-- [ ] **Publisher wallet**: a Solana wallet (Phantom / Solflare / Backpack) with ~0.2 SOL for Arweave uploads and NFT mints. Keep the keypair offline between releases.
+- [ ] **Release keystore** — a new key used only for the dApp Store (never a Google Play key). Either:
+  - let EAS generate and manage it on the first `dapp-store` build, then download a backup with `eas credentials`; or
+  - generate your own (needs a JDK for `keytool`) and upload it to EAS or use it for local Gradle builds:
+    ```bash
+    mkdir -p keystores
+    keytool -genkeypair -v -storetype PKCS12 -keystore keystores/dapp-store-release.jks \
+      -alias dappstore -keyalg RSA -keysize 4096 -validity 10000
+    ```
+    For local builds copy `keystore.properties.example` → `android/keystore.properties` after prebuild and fill it in (git-ignored).
+
+  Back the keystore and passwords up somewhere durable — losing them means you can never update the listing.
+- [ ] **Publisher Portal account** at https://publish.solanamobile.com: complete the publisher profile and submit **KYC/KYB identity verification**. The verified identity should match the publisher name above.
+- [ ] **Publisher wallet**: a browser-extension Solana wallet (Phantom / Solflare / Backpack) with ~0.2 SOL for storage uploads and NFT mints. It becomes the permanent publisher wallet for this app — without it you cannot submit updates. Keep the seed phrase offline.
 
 ## B. Build the release APK
+
+EAS (recommended — no local JDK / Android SDK needed):
 
 ```bash
 npm ci
 npm run typecheck && npm test
+eas build -p android --profile dapp-store
+```
+
+or locally (needs JDK 17 + Android SDK):
+
+```bash
 npx expo prebuild --platform android --clean
 cp keystore.properties.example android/keystore.properties   # then edit
 cd android && ./gradlew assembleRelease
 # → android/app/build/outputs/apk/release/app-release.apk
 ```
-or with EAS: `eas build -p android --profile dapp-store`.
 
 - [ ] Verify it is release-signed with **your** key, not debug:
   `apksigner verify --print-certs app-release.apk` (certificate DN must be yours, not `CN=Android Debug`).
 - [ ] Verify the manifest: `aapt dump badging app-release.apk | grep -E "package|uses-permission|sdkVersion|targetSdkVersion"` — expect `versionCode='2'` (or higher), `targetSdkVersion:'36'`, and only `INTERNET` + `VIBRATE`.
-- [ ] Install on an API 34+ arm64 emulator or a Seeker and smoke-test all four tabs, a device detail, a vendor link (opens Custom Tab), and the Legal screens.
+- [ ] Install on an API 34+ arm64 emulator or a Seeker and smoke-test: welcome → Enter Explorer, all four tabs, a device detail, a vendor link (opens Custom Tab), the Legal screens, and Android back from the tabs.
 
 ## C. Listing assets (in `store-assets/`)
 
 | Asset | Requirement | Provided |
 |---|---|---|
-| App icon | 512×512 PNG, square, **must match launcher icon** | `icon-512.png` (same artwork as `assets/icon.png`) |
+| App icon | 512×512 PNG, **must match launcher icon** | `icon-512.png` (same artwork as `assets/icon.png`) |
 | Banner | 1200×600 PNG/JPG | `banner-1200x600.png` |
-| Screenshots | ≥4, min 1080 px, all same orientation, must show real functionality | `screenshot-1…7` at 1080×2340 (portrait) — regenerate from a real device/emulator before final submission if you prefer native captures |
-| Feature graphic | 1200×1200 (optional) | — |
+| Screenshots | ≥4, min 1080 px, same orientation and aspect ratio, must show real functionality | `screenshot-1…9` at 1080×2340 (portrait). These were captured from the web build and the tab-bar labels are clipped — **retake them on an emulator or Seeker before submission** |
+| Feature graphic | 1200×1200 (optional, needed for Editor's choice) | — |
 
 Suggested listing copy:
 
 - **Name:** Seeker DePIN Explorer
 - **Short description (≤30 chars):** Explore Solana DePIN hardware
-- **Long description:** A field guide to the physical hardware that plugs into Solana — the Seeker and Saga phones, the CUDIS ring and BrushO toothbrush that pay for healthy habits, Helium hotspots, the Hivemapper Bee dashcam, GEODNET stations and XNET radios. Compare specs and prices side by side, see how each device earns, follow each network's timeline, and jump to the vendor. No wallet, no account, no data collection.
+- **Long description:** A field guide to the physical hardware that plugs into Solana — 16 devices across 13 networks, from the Seeker and Saga phones and the CUDIS ring to Helium hotspots, the Hivemapper Bee dashcam, GEODNET and onocoy GNSS stations, XNET radios, WeatherXM weather stations, Wingbits flight trackers and more. Compare specs and prices side by side, check each device's adoption-confidence score, see how it earns, follow each network's timeline, and jump to the vendor. No wallet, no account, no data collection.
 - **Category:** Utilities / Reference (DePIN)
 - **Age rating:** Everyone
-- **Testing instructions for reviewers:** No login or wallet required. Open Explore → tap any device → tap a vendor link (opens in Chrome Custom Tab). Compare tab: add up to three devices. About → Legal shows Privacy Policy, Terms, Copyright.
-- **What's new (v1.0.0):** Initial release — 10 devices, compare view, network guide.
+- **Testing instructions for reviewers:** No login or wallet required. Launch → Enter Explorer → tap any device → tap a vendor link (opens in Chrome Custom Tab). Compare tab: add up to three devices. About → Legal shows Privacy Policy, Terms, Copyright.
+- **What's new (v1.0.0):** Initial release — 16 devices across 13 networks, adoption-confidence scores, compare view, network guide.
 
-## D. Submit
+## D. Submit (Publisher Portal)
 
-1. Sign in at https://publish.solanamobile.com with the publisher wallet.
-2. Create the publisher profile, then **New dApp** → fill metadata, upload icon/banner/screenshots, paste the three legal URLs.
-3. **New Version** → upload `app-release.apk`, add release notes and testing instructions, sign the Arweave upload and NFT mint transactions.
+1. Sign in at https://publish.solanamobile.com, connect the publisher wallet, and pick a storage provider (ArDrive recommended — use the cost estimator and top up the prepaid balance first).
+2. **Add a dApp → New dApp** → fill metadata, upload icon/banner/screenshots, paste the three legal URLs.
+3. App **Home → New Version** → upload `app-release.apk`, add release notes and testing instructions, press **Submit** and approve the storage upload and App/Release NFT mint transactions.
 4. Accept the Publisher Policy, Developer Agreement and Terms of Use.
-5. Wait for the review email (typically 2–5 business days). Questions go to the `#dapp-store` channel on the Solana Mobile Discord.
+5. Review results arrive by email from `publishersupport@dappstore.solanamobile.com` within 3–5 business days. Questions go to `#dev-answers` on the Solana Mobile Discord.
 
 ## E. Every update after that
 
 - Bump `expo.version` and **increment `android.versionCode`** in `app.json` (regressions are rejected).
-- Same package id, same signing key.
+- Same package id, same signing key, same publisher wallet. Fill in "What's new".
 - `npm run typecheck && npm test && npm run audit`.
 - Re-check the manifest diff after any SDK or dependency upgrade.
+- Submit from the portal (**Home → New Version**) or with the portal-backed CLI:
+  ```bash
+  npm install -g @solana-mobile/dapp-store-cli
+  # export DAPP_STORE_API_KEY=<portal API key>
+  dapp-store --apk-file app-release.apk --keypair <publisher-keypair.json> --whats-new "…"
+  ```
 
 ## Policy points this app satisfies by design
 

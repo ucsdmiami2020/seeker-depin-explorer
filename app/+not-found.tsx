@@ -13,7 +13,7 @@ export default function NotFound() {
         <Ionicons name="compass-outline" size={44} color={colors.textFaint} />
         <Text style={styles.title}>Nothing here</Text>
         <Text style={styles.body}>That screen doesn't exist in this version of the app.</Text>
-        <Link href="/" replace asChild>
+        <Link href="/(tabs)" replace asChild>
           <Pressable style={styles.btn}>
             <Text style={styles.btnText}>Back to Explore</Text>
           </Pressable>
