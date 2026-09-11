@@ -29,6 +29,7 @@ export default function RootLayout() {
       <AppStateProvider>
         <StatusBar style="light" />
         <Stack
+          initialRouteName="welcome"
           screenOptions={{
             headerStyle: { backgroundColor: colors.bg },
             headerTintColor: colors.text,
@@ -37,6 +38,7 @@ export default function RootLayout() {
             contentStyle: { backgroundColor: colors.bg },
           }}
         >
+          <Stack.Screen name="welcome" options={{ headerShown: false }} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="device/[id]" options={{ title: '', headerTransparent: true }} />
           <Stack.Screen name="legal/[doc]" options={{ title: 'Legal' }} />
