@@ -44,5 +44,8 @@
     "web": "expo start --web",
     "test": "tsx src/lib/__tests__/allowlist.test.ts && tsx src/lib/__tests__/tokens.test.ts"
   },
-  "private": true
+  "private": true,
+  "engines": {
+    "node": ">=22"
+  }
 }

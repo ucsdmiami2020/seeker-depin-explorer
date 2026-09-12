@@ -1,5 +1,7 @@
 # Seeker DePIN Explorer
 
+[![CI](https://github.com/ucsdmiami2020/seeker-depin-explorer/actions/workflows/ci.yml/badge.svg)](https://github.com/ucsdmiami2020/seeker-depin-explorer/actions/workflows/ci.yml)
+
 A modern, interactive field guide to the physical hardware that plugs into Solana — built for the **Solana Seeker** (and any Android phone) with Expo / React Native.
 
 **What's in v1.1 (wallet optional, no account)**
