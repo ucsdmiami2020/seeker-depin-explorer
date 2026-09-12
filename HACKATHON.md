@@ -12,7 +12,14 @@ Event: https://solanamobile.radiant.nexus/ · Submissions due **9 Oct 2026, 1:59
 | Meaningful interaction with the Solana network | Reads SOL and SPL balances from mainnet/devnet RPC, resolves 12 verified DePIN mints to catalog networks, and signs an off-chain ownership proof. |
 | GitHub repo accessible to judges | https://github.com/ucsdmiami2020/seeker-depin-explorer |
 | Demo video | Script in `docs/DEMO_SCRIPT.md`; **recording pending**. |
-| Pitch deck | `docs/pitch-deck.pptx`. |
+| Pitch deck | `docs/pitch-deck.pptx` — 10 slides, rendered and visually checked. |
+
+## Links
+
+- **Repo (public):** https://github.com/ucsdmiami2020/seeker-depin-explorer
+- **Legal pages:** https://ucsdmiami2020.github.io/seeker-depin-legal/ — [privacy-policy](https://ucsdmiami2020.github.io/seeker-depin-legal/privacy-policy) · [terms-of-use](https://ucsdmiami2020.github.io/seeker-depin-legal/terms-of-use) · [copyright](https://ucsdmiami2020.github.io/seeker-depin-legal/copyright)
+- **CI:** GitHub Actions runs typecheck and both test suites on every push.
+- **EAS CLI:** installed locally (eas-cli 24.3.0). Run `eas login`, then `eas build -p android --profile dapp-store`.
 
 ## Eligibility notes
 
