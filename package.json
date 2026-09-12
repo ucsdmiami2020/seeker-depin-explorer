@@ -1,10 +1,14 @@
 {
   "name": "seeker-depin-explorer",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "license": "UNLICENSED",
   "main": "index.ts",
   "dependencies": {
     "@expo/vector-icons": "^15.1.1",
+    "@solana-mobile/mobile-wallet-adapter-protocol": "^2.3.0",
+    "@solana-mobile/mobile-wallet-adapter-protocol-web3js": "^2.3.0",
+    "@solana/web3.js": "^1.99.0",
+    "buffer": "^6.0.3",
     "expo": "~57.0.22",
     "expo-build-properties": "~57.0.17",
     "expo-constants": "~57.0.17",
@@ -20,6 +24,7 @@
     "react": "19.2.3",
     "react-dom": "^19.2.3",
     "react-native": "0.86.3",
+    "react-native-get-random-values": "^2.0.0",
     "react-native-safe-area-context": "~5.7.0",
     "react-native-screens": "~4.26.0",
     "react-native-web": "^0.21.2"
@@ -37,7 +42,7 @@
     "audit": "npm audit --omit=dev",
     "prebuild:android": "expo prebuild --platform android --clean",
     "web": "expo start --web",
-    "test": "tsx src/lib/__tests__/allowlist.test.ts"
+    "test": "tsx src/lib/__tests__/allowlist.test.ts && tsx src/lib/__tests__/tokens.test.ts"
   },
   "private": true
 }

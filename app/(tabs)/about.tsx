@@ -9,7 +9,7 @@ import { openExternal } from '../../src/lib/links';
 import { Bullet, Card, SectionTitle } from '../../src/components/ui';
 
 const ROADMAP = [
-  'Wallet connect via Mobile Wallet Adapter — see which device NFTs / tokens you already hold',
+  'Reward history per device, read from each network on-chain',
   'Live token prices and network stats pulled from public APIs',
   'Helium hotspot lookup by wallet address, with reward history',
   'Community-submitted devices with on-chain attestation',
@@ -44,7 +44,10 @@ export default function About() {
         <Bullet>"Seeker-ready" means the device has an Android companion app or web console that works on Seeker.</Bullet>
         <Bullet>Token rewards vary with network demand and are never guaranteed. Nothing here is financial advice.</Bullet>
         <Bullet>Device icons are illustrative glyphs, not product imagery.</Bullet>
-        <Bullet>The app collects no data and makes no network requests of its own; links open in your browser.</Bullet>
+        <Bullet>
+          The app collects no data. It makes no network requests until you connect a wallet, and then only to read
+          public balances from a Solana RPC endpoint; links open in your browser.
+        </Bullet>
       </Card>
 
       <SectionTitle>Roadmap</SectionTitle>

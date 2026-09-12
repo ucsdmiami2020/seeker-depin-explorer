@@ -37,7 +37,7 @@ export const legalDocs: Record<LegalDocId, LegalDoc> = {
       {
         heading: 'Network access',
         body:
-          'The app itself makes no network requests. When you tap a vendor or documentation link, the page opens in an Android Custom Tab (Chrome) or your default browser over HTTPS. From that point the vendor\'s own privacy policy applies; we do not receive any information about what you do there. Only a fixed allow-list of vendor domains can be opened.',
+          'Until you connect a wallet, the app makes no network requests of its own. When you tap a vendor or documentation link, the page opens in an Android Custom Tab (Chrome) or your default browser over HTTPS. From that point the vendor\'s own privacy policy applies; we do not receive any information about what you do there. Only a fixed allow-list of vendor domains can be opened. If you connect a wallet, the app queries a public Solana RPC endpoint over HTTPS to read balances for that address — see "Wallet and on-chain data" below.',
       },
       {
         heading: 'Permissions',
@@ -45,9 +45,9 @@ export const legalDocs: Record<LegalDocId, LegalDoc> = {
           'The app requests no dangerous Android permissions. It uses INTERNET (to open links in the browser) and VIBRATE (for light haptic feedback). Backup of app data to Google is disabled.',
       },
       {
-        heading: 'Wallets and blockchain',
+        heading: 'Wallet and on-chain data',
         body:
-          'This version does not connect to a wallet, request signatures, or read on-chain data. If a future version adds Mobile Wallet Adapter support, it will only request the minimum permissions needed, will never have access to your seed phrase or private keys (which stay in Seed Vault or your wallet app), and this policy will be updated before release.',
+          'Connecting a wallet is optional and off by default. If you connect one, the app uses Mobile Wallet Adapter to ask your wallet app (or Seed Vault on a Seeker) to share a public address. The app never sees, requests or stores your seed phrase or private keys, and it never creates or submits a transaction — the only signature it can ask for is an off-chain text message you read first. Your address and the authorisation token are held in memory for the session and are cleared when you disconnect or close the app. To show balances, the address is sent to a public Solana RPC endpoint (api.mainnet-beta.solana.com or api.devnet.solana.com, or an endpoint configured at build time); that provider necessarily sees the address and your IP address and is governed by its own policy. Anything you sign or hold on-chain is public data on Solana.',
       },
       {
         heading: 'Children',
@@ -71,6 +71,11 @@ export const legalDocs: Record<LegalDocId, LegalDoc> = {
         heading: 'Informational content only',
         body:
           'The app is an independent catalog of third-party hardware. Specifications, prices, availability, token details and reward mechanics are compiled from public vendor materials and press coverage, may be out of date, and are provided "as is" without warranty of accuracy. Always confirm details with the vendor before purchasing.',
+      },
+      {
+        heading: 'Wallet features',
+        body:
+          'Connecting a wallet is optional. Balances shown in the app are read from a public Solana RPC endpoint and may be delayed, incomplete or unavailable; only tokens whose mints we could verify are labelled by name. The app never creates or submits transactions, and the ownership proof it offers is an off-chain message you can read before signing. You are responsible for what you sign and for keeping your wallet and recovery phrase secure. Nothing shown in the wallet view is financial advice or a statement of value.',
       },
       {
         heading: 'No financial, investment or legal advice',

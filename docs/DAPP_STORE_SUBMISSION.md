@@ -3,10 +3,12 @@
 Everything below maps to a documented requirement or a known rejection reason. Tick them in order.
 Reference: [Submit a New App](https://docs.solanamobile.com/dapp-store/submit-new-app) · [Build and Sign an APK](https://docs.solanamobile.com/dapp-store/build-and-sign-an-apk) · [Publisher Policy](https://legal.solanamobile.com/publisher-policy-web)
 
+Current build: **v1.1.0, versionCode 3** (adds Mobile Wallet Adapter + read-only on-chain balances).
+
 ## A. One-time setup
 
 - [x] **Publisher identity** in `src/data/legal.ts` (`PUBLISHER.name`, `contactEmail`) — Bobby Fisher · rchac005@gmail.com. `/docs/*.md` mirror the in-app screens; keep them in sync if you change wording.
-- [ ] **Website**: set `PUBLISHER.website` and the footers of `docs/*.md` to the GitHub Pages URL once the repo is published.
+- [ ] **Website**: set `PUBLISHER.website` and the footers of `docs/*.md` to the GitHub Pages URL once the repo is published. The same URL becomes the MWA app identity shown in wallet approval sheets.
 - [ ] **Host the three legal documents** at public HTTPS URLs (GitHub Pages from `docs/`: `privacy-policy`, `terms-of-use`, `copyright`). The portal asks for Privacy Policy, EULA/Terms and Copyright URLs.
 - [ ] **Choose the final Android package id** in `app.json` (`android.package`). It is permanent once the App NFT is minted and must match the APK on every update.
 - [ ] **Release keystore** — a new key used only for the dApp Store (never a Google Play key). Either:
@@ -42,10 +44,11 @@ cd android && ./gradlew assembleRelease
 # → android/app/build/outputs/apk/release/app-release.apk
 ```
 
+- [ ] Set `EXPO_PUBLIC_SOLANA_RPC` to a dedicated HTTPS RPC endpoint before building. The public endpoints are rate-limited, and a reviewer hitting a 429 sees an app that looks broken.
 - [ ] Verify it is release-signed with **your** key, not debug:
   `apksigner verify --print-certs app-release.apk` (certificate DN must be yours, not `CN=Android Debug`).
-- [ ] Verify the manifest: `aapt dump badging app-release.apk | grep -E "package|uses-permission|sdkVersion|targetSdkVersion"` — expect `versionCode='2'` (or higher), `targetSdkVersion:'36'`, and only `INTERNET` + `VIBRATE`.
-- [ ] Install on an API 34+ arm64 emulator or a Seeker and smoke-test: welcome → Enter Explorer, all four tabs, a device detail, a vendor link (opens Custom Tab), the Legal screens, and Android back from the tabs.
+- [ ] Verify the manifest: `aapt dump badging app-release.apk | grep -E "package|uses-permission|sdkVersion|targetSdkVersion"` — expect `versionCode='3'` (or higher), `targetSdkVersion:'36'`, and still only `INTERNET` + `VIBRATE` (MWA needs no extra permission).
+- [ ] Install on an API 34+ arm64 emulator or a Seeker and run the full device checklist in `HACKATHON.md` — including the wallet flows, which cannot be tested on web.
 
 ## C. Listing assets (in `store-assets/`)
 
@@ -53,18 +56,18 @@ cd android && ./gradlew assembleRelease
 |---|---|---|
 | App icon | 512×512 PNG, **must match launcher icon** | `icon-512.png` (same artwork as `assets/icon.png`) |
 | Banner | 1200×600 PNG/JPG | `banner-1200x600.png` |
-| Screenshots | ≥4, min 1080 px, same orientation and aspect ratio, must show real functionality | `screenshot-1…9` at 1080×2340 (portrait). These were captured from the web build and the tab-bar labels are clipped — **retake them on an emulator or Seeker before submission** |
+| Screenshots | ≥4, min 1080 px, same orientation and aspect ratio, must show real functionality | `screenshot-1…9` at 1080×2340 (portrait). These were captured from the web build and the tab-bar labels are clipped — **retake on an emulator or Seeker, and add the Wallet tab** (connected state + holdings), since it is now a headline feature |
 | Feature graphic | 1200×1200 (optional, needed for Editor's choice) | — |
 
 Suggested listing copy:
 
 - **Name:** Seeker DePIN Explorer
 - **Short description (≤30 chars):** Explore Solana DePIN hardware
-- **Long description:** A field guide to the physical hardware that plugs into Solana — 16 devices across 13 networks, from the Seeker and Saga phones and the CUDIS ring to Helium hotspots, the Hivemapper Bee dashcam, GEODNET and onocoy GNSS stations, XNET radios, WeatherXM weather stations, Wingbits flight trackers and more. Compare specs and prices side by side, check each device's adoption-confidence score, see how it earns, follow each network's timeline, and jump to the vendor. No wallet, no account, no data collection.
+- **Long description:** A field guide to the physical hardware that plugs into Solana — 16 devices across 13 networks, from the Seeker and Saga phones and the CUDIS ring to Helium hotspots, the Hivemapper Bee dashcam, GEODNET and onocoy GNSS stations, XNET radios, WeatherXM weather stations, Wingbits flight trackers and more. Compare specs and prices side by side, check each device's adoption-confidence score, see how it earns, follow each network's timeline, and jump to the vendor. Connect a wallet to see which of those networks you already hold — balances are read straight from Solana, and the app never sees your keys or sends a transaction.
 - **Category:** Utilities / Reference (DePIN)
 - **Age rating:** Everyone
-- **Testing instructions for reviewers:** No login or wallet required. Launch → Enter Explorer → tap any device → tap a vendor link (opens in Chrome Custom Tab). Compare tab: add up to three devices. About → Legal shows Privacy Policy, Terms, Copyright.
-- **What's new (v1.0.0):** Initial release — 16 devices across 13 networks, adoption-confidence scores, compare view, network guide.
+- **Testing instructions for reviewers:** No login or account required. Launch → Enter Explorer → tap any device → tap a vendor link (opens in Chrome Custom Tab). Compare tab: add up to three devices. Wallet tab is optional: tap Connect wallet and approve in Phantom/Solflare/Backpack to see SOL and DePIN token balances — a Devnet toggle is provided so no mainnet funds are needed, and "Sign ownership proof" signs an off-chain message only (no transaction, no fee). About → Legal shows Privacy Policy, Terms, Copyright.
+- **What's new (v1.1.0):** Wallet connect via Mobile Wallet Adapter — see which DePIN networks you hold, on mainnet or devnet, and sign an off-chain ownership proof.
 
 ## D. Submit (Publisher Portal)
 
@@ -76,7 +79,7 @@ Suggested listing copy:
 
 ## E. Every update after that
 
-- Bump `expo.version` and **increment `android.versionCode`** in `app.json` (regressions are rejected).
+- Bump `expo.version` and **increment `android.versionCode`** in `app.json` (regressions are rejected). Keep `package.json` version in step.
 - Same package id, same signing key, same publisher wallet. Fill in "What's new".
 - `npm run typecheck && npm test && npm run audit`.
 - Re-check the manifest diff after any SDK or dependency upgrade.
@@ -89,8 +92,9 @@ Suggested listing copy:
 
 ## Policy points this app satisfies by design
 
-- No deceptive or misleading claims: every reward mention carries a "not guaranteed / not financial advice" disclaimer; prices are labelled as list prices with vendor links.
+- No deceptive or misleading claims: every reward mention carries a "not guaranteed / not financial advice" disclaimer; prices are labelled as list prices with vendor links; wallet balances are labelled as public on-chain data that may be delayed.
 - No IP misuse: no vendor logos or product photography; trademarks used nominatively and attributed on the Copyright screen; original app icon.
-- No data collection, no analytics, no ads, no third-party SDKs that phone home; privacy policy states exactly that.
+- Wallet safety: no key material in the app, no transaction construction or submission, signing limited to an off-chain message the user reads first, authorisation kept in memory and cleared on disconnect.
+- Privacy: no analytics, no ads, no accounts, no third-party SDKs that phone home. The only outbound request is to the Solana RPC endpoint, and only after the user connects a wallet — disclosed in the privacy policy.
 - Not a thin web wrapper: native RN UI, no WebView.
 - Functionality matches screenshots and description.

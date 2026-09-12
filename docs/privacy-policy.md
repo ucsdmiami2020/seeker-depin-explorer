@@ -12,15 +12,15 @@ Favourites and compare selections are kept in memory only and are discarded when
 
 ## Network access
 
-The app itself makes no network requests. When you tap a vendor or documentation link, the page opens in an Android Custom Tab (Chrome) or your default browser over HTTPS. From that point the vendor's own privacy policy applies; we do not receive any information about what you do there. Only a fixed allow-list of vendor domains can be opened.
+Until you connect a wallet, the app makes no network requests of its own. When you tap a vendor or documentation link, the page opens in an Android Custom Tab (Chrome) or your default browser over HTTPS. From that point the vendor's own privacy policy applies; we do not receive any information about what you do there. Only a fixed allow-list of vendor domains can be opened. If you connect a wallet, the app queries a public Solana RPC endpoint over HTTPS to read balances for that address — see "Wallet and on-chain data" below.
 
 ## Permissions
 
 The app requests no dangerous Android permissions. It uses INTERNET (to open links in the browser) and VIBRATE (for light haptic feedback). Backup of app data to Google is disabled.
 
-## Wallets and blockchain
+## Wallet and on-chain data
 
-This version does not connect to a wallet, request signatures, or read on-chain data. If a future version adds Mobile Wallet Adapter support, it will only request the minimum permissions needed, will never have access to your seed phrase or private keys (which stay in Seed Vault or your wallet app), and this policy will be updated before release.
+Connecting a wallet is optional and off by default. If you connect one, the app uses Mobile Wallet Adapter to ask your wallet app (or Seed Vault on a Seeker) to share a public address. The app never sees, requests or stores your seed phrase or private keys, and it never creates or submits a transaction — the only signature it can ask for is an off-chain text message you read first. Your address and the authorisation token are held in memory for the session and are cleared when you disconnect or close the app. To show balances, the address is sent to a public Solana RPC endpoint (api.mainnet-beta.solana.com or api.devnet.solana.com, or an endpoint configured at build time); that provider necessarily sees the address and your IP address and is governed by its own policy. Anything you sign or hold on-chain is public data on Solana.
 
 ## Children
 

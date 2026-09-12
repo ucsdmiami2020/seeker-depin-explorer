@@ -2,7 +2,7 @@
   "expo": {
     "name": "Seeker DePIN Explorer",
     "slug": "seeker-depin-explorer",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "scheme": "seekerdepin",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -19,7 +19,7 @@
     },
     "android": {
       "package": "com.srblife.seekerdepinexplorer",
-      "versionCode": 2,
+      "versionCode": 3,
       "adaptiveIcon": {
         "backgroundColor": "#0B0B12",
         "foregroundImage": "./assets/android-icon-foreground.png",

@@ -79,3 +79,16 @@ Runtime bundle contains no other flagged packages. Re-run `npm run audit` before
 3. **Keystore custody:** store the release `.jks` and passwords in a password manager / HSM-backed secret store; the dApp Store cannot re-key a listing.
 4. **Solana publisher keypair:** anyone holding it can publish releases under your name. Keep it offline; consider a dedicated hardware-backed key.
 5. **SDK cadence:** Expo SDK 57 targets API 36. Re-run `npm run audit` and `expo prebuild` after each SDK bump and diff the manifest.
+
+## Addendum — wallet integration (v1.1.0, versionCode 3), 2026-09-12
+
+v1.1.0 adds Mobile Wallet Adapter and read-only RPC access. This changes the attack surface described above, so:
+
+- **No key material in the app.** The app holds no private key, seed phrase or keypair. Authorization and signing happen inside the user's wallet app over MWA; the app receives a public address and an auth token. The auth token lives in React state only — it is never written to disk, so it cannot be read from a backup or another app.
+- **Signing is off-chain only.** The app implements `authorize`, `deauthorize` and `signMessages`. It never builds, signs or submits a transaction, so no code path can move a user's funds. The ownership proof is a plain-text statement; the user sees it before signing.
+- **Outbound network calls.** Reads go to `api.mainnet-beta.solana.com` / `api.devnet.solana.com` over HTTPS (or an `EXPO_PUBLIC_SOLANA_RPC` override, validated as HTTPS with no embedded credentials — `isValidRpcUrl`). `usesCleartextTraffic=false` still holds. The RPC provider necessarily sees the connected address and the device IP; this is disclosed in the privacy policy.
+- **Data handling.** The connected address and balances are in-memory only and cleared on disconnect. No analytics, no logging of addresses.
+- **New dependencies.** `@solana-mobile/mobile-wallet-adapter-protocol{,-web3js}` 2.3.0, `@solana/web3.js` 1.99.0, `react-native-get-random-values`, `buffer`. `npm run audit` goes from 14 to 18 moderate entries, collapsing to **three** root causes — the two previously accepted (`decode-uri-component`, `uuid`) plus one new:
+  - **`stream-json` ≤3.4.0** (GHSA-528h-pc64-c93x, quadratic parsing of deeply nested JSON → event-loop DoS), reached via `@solana/web3.js → jayson`. It can only be triggered by the JSON an RPC endpoint returns, so the threat is a hostile or compromised RPC provider, and the impact is bounded to CPU time in the app's own process — there is no key material or user data to lose. Mitigations already in place: the endpoint is a fixed HTTPS default or a build-time value validated by `isValidRpcUrl`, never user- or link-supplied. **Accepted; re-check on each `@solana/web3.js` upgrade.**
+- **Permissions unchanged.** MWA works over intents and local sockets; the manifest still carries only INTERNET and VIBRATE.
+- **Not yet verified on hardware.** The MWA flow has not been exercised on a device or emulator in this environment (no Android SDK/JDK available). Typecheck, unit tests and the web build pass. Run the checklist in `HACKATHON.md` on a Seeker or an Android emulator with Phantom before submitting or shipping.

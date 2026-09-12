@@ -11,6 +11,8 @@ import { openExternal } from '../../src/lib/links';
 import { Bullet, Card, DeviceIcon, IconButton, SectionTitle, SpecRow, StatusPill, TokenPill, tap } from '../../src/components/ui';
 import { DeviceCard } from '../../src/components/DeviceCard';
 import { useAppState } from '../../src/state/AppState';
+import { useWallet } from '../../src/state/WalletProvider';
+import { formatAmount } from '../../src/lib/solana';
 import { AdoptionBadge, AdoptionPanel } from '../../src/components/AdoptionBadge';
 
 export default function DeviceDetail() {
@@ -19,6 +21,9 @@ export default function DeviceDetail() {
   const insets = useSafeAreaInsets();
   const device = getDevice(String(id));
   const { isFavorite, toggleFavorite, isCompared, toggleCompare } = useAppState();
+  const { account, holdings } = useWallet();
+  // Shown only when a wallet is connected and actually holds this network's token.
+  const networkHolding = account ? holdings.find((h) => h.token?.networkId === device?.network) : undefined;
 
   if (!device) {
     // Reached via a stale deep link (seekerdepin://device/<unknown>) or a removed catalog entry.
@@ -109,6 +114,16 @@ export default function DeviceDetail() {
               </View>
             ))}
           </View>
+
+          {networkHolding?.token ? (
+            <View style={[styles.note, { backgroundColor: '#14F19514' }]}>
+              <Ionicons name="wallet-outline" size={16} color={colors.solanaGreen} />
+              <Text style={styles.noteText}>
+                Your connected wallet holds {formatAmount(networkHolding.amount)} ${networkHolding.token.symbol} — the
+                token this device earns.
+              </Text>
+            </View>
+          ) : null}
 
           <SectionTitle>Adoption confidence</SectionTitle>
           <AdoptionPanel adoption={device.adoption} />

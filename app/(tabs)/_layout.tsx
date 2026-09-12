@@ -28,6 +28,10 @@ export default function TabLayout() {
         options={{ title: 'Networks', tabBarIcon: ({ color, size }) => <Ionicons name="planet" size={size} color={color} /> }}
       />
       <Tabs.Screen
+        name="wallet"
+        options={{ title: 'Wallet', tabBarIcon: ({ color, size }) => <Ionicons name="wallet" size={size} color={color} /> }}
+      />
+      <Tabs.Screen
         name="about"
         options={{ title: 'About', tabBarIcon: ({ color, size }) => <Ionicons name="information-circle" size={size} color={color} /> }}
       />
