@@ -35,4 +35,4 @@ To the maximum extent permitted by law, the app is provided without warranties o
 We may update the app or these terms at any time. Continued use after an update constitutes acceptance. You may stop using the app at any time by uninstalling it.
 
 ---
-Bobby Fisher · rchac005@gmail.com · <https://yourdomain.com>
+Bobby Fisher · rchac005@gmail.com · https://ucsdmiami2020.github.io/seeker-depin-legal/

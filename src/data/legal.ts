@@ -7,7 +7,7 @@
 export const PUBLISHER = {
   name: 'Bobby Fisher',
   contactEmail: 'rchac005@gmail.com',
-  website: '<https://yourdomain.com>',
+  website: 'https://ucsdmiami2020.github.io/seeker-depin-legal/',
   lastUpdated: '2026-09-11',
 };
 

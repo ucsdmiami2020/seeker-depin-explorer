@@ -8,8 +8,11 @@ Current build: **v1.1.0, versionCode 3** (adds Mobile Wallet Adapter + read-only
 ## A. One-time setup
 
 - [x] **Publisher identity** in `src/data/legal.ts` (`PUBLISHER.name`, `contactEmail`) — Bobby Fisher · rchac005@gmail.com. `/docs/*.md` mirror the in-app screens; keep them in sync if you change wording.
-- [ ] **Website**: set `PUBLISHER.website` and the footers of `docs/*.md` to the GitHub Pages URL once the repo is published. The same URL becomes the MWA app identity shown in wallet approval sheets.
-- [ ] **Host the three legal documents** at public HTTPS URLs (GitHub Pages from `docs/`: `privacy-policy`, `terms-of-use`, `copyright`). The portal asks for Privacy Policy, EULA/Terms and Copyright URLs.
+- [x] **Website**: https://ucsdmiami2020.github.io/seeker-depin-legal/ (also the MWA app identity shown in wallet approval sheets).
+- [x] **Legal documents hosted** at https://ucsdmiami2020.github.io/seeker-depin-legal/ — paste these into the portal:
+  - Privacy Policy: https://ucsdmiami2020.github.io/seeker-depin-legal/privacy-policy
+  - Terms / EULA: https://ucsdmiami2020.github.io/seeker-depin-legal/terms-of-use
+  - Copyright: https://ucsdmiami2020.github.io/seeker-depin-legal/copyright
 - [ ] **Choose the final Android package id** in `app.json` (`android.package`). It is permanent once the App NFT is minted and must match the APK on every update.
 - [ ] **Release keystore** — a new key used only for the dApp Store (never a Google Play key). Either:
   - let EAS generate and manage it on the first `dapp-store` build, then download a backup with `eas credentials`; or

@@ -31,4 +31,4 @@ The app is informational and suitable for general audiences. It is not directed 
 We will update this policy if the app's data practices change, and note the date above. Questions: rchac005@gmail.com.
 
 ---
-Bobby Fisher · rchac005@gmail.com · <https://yourdomain.com>
+Bobby Fisher · rchac005@gmail.com · https://ucsdmiami2020.github.io/seeker-depin-legal/

@@ -10,7 +10,7 @@ Event: https://solanamobile.radiant.nexus/ · Submissions due **9 Oct 2026, 1:59
 | Integrates Solana Mobile Stack + Mobile Wallet Adapter | Done in code: `src/state/WalletProvider.tsx` (authorize / deauthorize / signMessages over MWA 2.3). **Not yet exercised on hardware.** |
 | Mobile-first, not a port or PWA wrapper | Native React Native UI, no WebView. MWA, Seed Vault-compatible signing, haptics, Android Custom Tabs, adaptive + monochrome icons, predictive back, deep links. |
 | Meaningful interaction with the Solana network | Reads SOL and SPL balances from mainnet/devnet RPC, resolves 12 verified DePIN mints to catalog networks, and signs an off-chain ownership proof. |
-| GitHub repo accessible to judges | **Pending** — must be public (or judge-accessible) before the deadline. |
+| GitHub repo accessible to judges | https://github.com/ucsdmiami2020/seeker-depin-explorer |
 | Demo video | Script in `docs/DEMO_SCRIPT.md`; **recording pending**. |
 | Pitch deck | `docs/pitch-deck.pptx`. |
 

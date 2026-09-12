@@ -19,4 +19,4 @@ The app intentionally contains no vendor product photography or logos. Device an
 If you believe content in the app infringes your rights, contact rchac005@gmail.com with the item, your claim and your contact details, and we will respond promptly.
 
 ---
-Bobby Fisher · rchac005@gmail.com · <https://yourdomain.com>
+Bobby Fisher · rchac005@gmail.com · https://ucsdmiami2020.github.io/seeker-depin-legal/
