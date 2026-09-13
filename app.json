@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Seeker DePIN Explorer",
-    "slug": "seeker-depin-explorer",
+    "slug": "solanoseekerrwaviewer",
     "version": "1.1.0",
     "scheme": "seekerdepin",
     "orientation": "portrait",
@@ -69,7 +69,8 @@
             "enableShrinkResourcesInReleaseBuilds": true,
             "enablePngCrunchInReleaseBuilds": true,
             "networkInspector": false,
-            "enableBundleCompression": true
+            "enableBundleCompression": true,
+            "enableMinifyInReleaseBuilds": true
           }
         }
       ],
@@ -78,6 +79,13 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "18d17ea5-2e07-4bdf-b834-9803a13b12d4"
+      }
+    },
+    "owner": "ucsdmiami2020s-team"
   }
 }
