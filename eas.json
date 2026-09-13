@@ -16,6 +16,7 @@
         "buildType": "apk",
         "gradleCommand": ":app:assembleRelease"
       },
+      "environment": "production",
       "env": { "APP_VARIANT": "dapp-store" }
     },
     "production": {

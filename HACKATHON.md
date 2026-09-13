@@ -25,7 +25,7 @@ Event: https://solanamobile.radiant.nexus/ · Submissions due **9 Oct 2026, 1:59
 
 - Project started September 2026, inside the 3-month window.
 - Pre-existing catalog app, but the hackathon work is substantial and mobile-specific: MWA wallet integration, on-chain balance reads, the verified token map, and the Wallet tab (commits from 2026-09-12).
-- One submission only, solo, under the registered account (Bobby Fisher / rchac005).
+- One submission only, solo, under the registered account (Rene Chacon / rchac005). The name on the Align profile must match the name in the submission materials.
 
 ## What the wallet integration actually does
 
@@ -53,11 +53,15 @@ The MWA flow has **not** been run on hardware from this environment (no Android 
 ## Build and submit
 
 ```bash
-npm ci && npm run typecheck && npm test
-eas build -p android --profile dapp-store       # needs: eas login
+npm ci
+npm run typecheck
+npm test
+eas login
+eas env:set --name EXPO_PUBLIC_SOLANA_RPC --value https://your-endpoint --environment production --visibility plaintext
+eas build -p android --profile dapp-store
 ```
 
-Optional: set `EXPO_PUBLIC_SOLANA_RPC` to a Helius (or similar) HTTPS endpoint before building — the public RPC is heavily rate-limited and judges may hit it.
+Set the RPC endpoint with `eas env:set` as above, not as a shell variable: EAS cloud builds do not receive your local environment. Use a Helius (or similar) HTTPS endpoint — the public RPC is heavily rate-limited and judges may hit it.
 
 Submission materials: APK, GitHub URL, demo video, `docs/pitch-deck.pptx`.
 

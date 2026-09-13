@@ -39,8 +39,16 @@ Web preview (handy for design iteration): `npx expo start --web`.
 Balances are read from the public endpoints by default. They are heavily rate-limited, so for a demo or a release set
 your own HTTPS endpoint (Helius, Triton, QuickNode…) at build time:
 
+Local run (PowerShell):
+
+```powershell
+$env:EXPO_PUBLIC_SOLANA_RPC = "https://your-endpoint.example.com"; npx expo run:android
+```
+
+EAS cloud builds do **not** receive variables from your shell. Store the endpoint in EAS once; the `dapp-store` profile in `eas.json` reads the `production` environment:
+
 ```bash
-EXPO_PUBLIC_SOLANA_RPC=https://your-endpoint.example.com npx expo run:android
+eas env:set --name EXPO_PUBLIC_SOLANA_RPC --value https://your-endpoint.example.com --environment production --visibility plaintext
 ```
 
 Non-HTTPS endpoints, or URLs with embedded credentials, are rejected (`src/lib/solana.ts`).
@@ -148,7 +156,7 @@ Specs and prices were gathered from vendor sites and press coverage in September
 
 ## Licence
 
-© 2026 Bobby Fisher. All rights reserved — see `LICENSE`.
+© 2026 Rene Chacon. All rights reserved — see `LICENSE`.
 
 ## Tooling notes
 

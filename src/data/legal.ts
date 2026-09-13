@@ -5,7 +5,7 @@
  * filled before submission.
  */
 export const PUBLISHER = {
-  name: 'Bobby Fisher',
+  name: 'Rene Chacon',
   contactEmail: 'rchac005@gmail.com',
   website: 'https://ucsdmiami2020.github.io/seeker-depin-legal/',
   lastUpdated: '2026-09-11',

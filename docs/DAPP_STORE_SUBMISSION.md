@@ -7,7 +7,7 @@ Current build: **v1.1.0, versionCode 3** (adds Mobile Wallet Adapter + read-only
 
 ## A. One-time setup
 
-- [x] **Publisher identity** in `src/data/legal.ts` (`PUBLISHER.name`, `contactEmail`) — Bobby Fisher · rchac005@gmail.com. `/docs/*.md` mirror the in-app screens; keep them in sync if you change wording.
+- [x] **Publisher identity** in `src/data/legal.ts` (`PUBLISHER.name`, `contactEmail`) — Rene Chacon · rchac005@gmail.com. `/docs/*.md` mirror the in-app screens; keep them in sync if you change wording.
 - [x] **Website**: https://ucsdmiami2020.github.io/seeker-depin-legal/ (also the MWA app identity shown in wallet approval sheets).
 - [x] **Legal documents hosted** at https://ucsdmiami2020.github.io/seeker-depin-legal/ — paste these into the portal:
   - Privacy Policy: https://ucsdmiami2020.github.io/seeker-depin-legal/privacy-policy
@@ -16,7 +16,7 @@ Current build: **v1.1.0, versionCode 3** (adds Mobile Wallet Adapter + read-only
 - [ ] **Choose the final Android package id** in `app.json` (`android.package`). It is permanent once the App NFT is minted and must match the APK on every update.
 - [ ] **Release keystore** — a new key used only for the dApp Store (never a Google Play key). Either:
   - let EAS generate and manage it on the first `dapp-store` build, then download a backup with `eas credentials`; or
-  - generate your own (needs a JDK for `keytool`) and upload it to EAS or use it for local Gradle builds:
+  - generate your own (needs a JDK for `keytool`; the command below is bash syntax) and upload it to EAS or use it for local Gradle builds:
     ```bash
     mkdir -p keystores
     keytool -genkeypair -v -storetype PKCS12 -keystore keystores/dapp-store-release.jks \
@@ -30,13 +30,20 @@ Current build: **v1.1.0, versionCode 3** (adds Mobile Wallet Adapter + read-only
 
 ## B. Build the release APK
 
-EAS (recommended — no local JDK / Android SDK needed):
+EAS (recommended — no local JDK / Android SDK needed). Run each command on its own line: Windows PowerShell 5.1 does not support `&&`.
 
 ```bash
 npm ci
-npm run typecheck && npm test
+npm run typecheck
+npm test
+eas login
+eas env:set --name EXPO_PUBLIC_SOLANA_RPC --value https://your-endpoint --environment production --visibility plaintext
 eas build -p android --profile dapp-store
+eas credentials
 ```
+
+- `eas env:set` is needed once, not per build. `eas build` asks to generate a keystore on the first run — answer yes.
+- `eas credentials` → Android → dapp-store: download the keystore and store it with its passwords somewhere durable.
 
 or locally (needs JDK 17 + Android SDK):
 
@@ -47,7 +54,8 @@ cd android && ./gradlew assembleRelease
 # → android/app/build/outputs/apk/release/app-release.apk
 ```
 
-- [ ] Set `EXPO_PUBLIC_SOLANA_RPC` to a dedicated HTTPS RPC endpoint before building. The public endpoints are rate-limited, and a reviewer hitting a 429 sees an app that looks broken.
+- [ ] **Set the RPC endpoint in EAS, not in your shell.** EAS cloud builds do not receive environment variables from your terminal, so `EXPO_PUBLIC_SOLANA_RPC=… eas build` silently falls back to the public RPC. Use `eas env:set … --environment production` (above); the `dapp-store` profile in `eas.json` reads the `production` environment. The public endpoints are rate-limited, and a reviewer hitting a 429 sees an app that looks broken.
+- The two checks below need the Android SDK build-tools (`apksigner`, `aapt`), which EAS does not install on your machine. Without them you can still see the keystore SHA-256 fingerprint in `eas credentials`. In PowerShell, replace `| grep -E "…"` with `| Select-String "package|uses-permission|sdkVersion|targetSdkVersion"`.
 - [ ] Verify it is release-signed with **your** key, not debug:
   `apksigner verify --print-certs app-release.apk` (certificate DN must be yours, not `CN=Android Debug`).
 - [ ] Verify the manifest: `aapt dump badging app-release.apk | grep -E "package|uses-permission|sdkVersion|targetSdkVersion"` — expect `versionCode='3'` (or higher), `targetSdkVersion:'36'`, and still only `INTERNET` + `VIBRATE` (MWA needs no extra permission).
@@ -89,7 +97,8 @@ Suggested listing copy:
 - Submit from the portal (**Home → New Version**) or with the portal-backed CLI:
   ```bash
   npm install -g @solana-mobile/dapp-store-cli
-  # export DAPP_STORE_API_KEY=<portal API key>
+  # bash:       export DAPP_STORE_API_KEY=<portal API key>
+  # PowerShell: $env:DAPP_STORE_API_KEY = "<portal API key>"
   dapp-store --apk-file app-release.apk --keypair <publisher-keypair.json> --whats-new "…"
   ```
 
