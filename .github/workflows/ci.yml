@@ -15,8 +15,6 @@ jobs:
         with:
           node-version: 22
           cache: npm
-      - name: Match the npm that produced package-lock.json
-        run: npm i -g npm@11
       - run: npm ci
       - name: Typecheck
         run: npm run typecheck
