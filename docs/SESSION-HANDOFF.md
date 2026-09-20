@@ -11,7 +11,7 @@ Where the dApp Store submission stands, and what to do next session.
 | Repo | https://github.com/ucsdmiami2020/seeker-depin-explorer (public), CI green |
 | PR | [#1](https://github.com/ucsdmiami2020/seeker-depin-explorer/pull/1) — feature graphic only; the rest already landed on `master` |
 | Legal pages | Live: https://ucsdmiami2020.github.io/seeker-depin-legal/ (privacy-policy · terms-of-use · copyright) |
-| APK v1.3.0 | **Was building at shutdown** — [build fc445979](https://expo.dev/accounts/ucsdmiami2020s-team/projects/solanoseekerrwaviewer/builds/fc445979-d596-4c9b-be54-ccd0b945a7f6). EAS builds in the cloud, so it finished without this machine. |
+| APK v1.3.0 | **Built OK** (87 MB). Direct download: https://expo.dev/artifacts/eas/dRRT9nZY95Ux6g-TAfzmb95nyIq6T2DWqwzuHbrLKb4.apk — [build fc445979](https://expo.dev/accounts/ucsdmiami2020s-team/projects/solanoseekerrwaviewer/builds/fc445979-d596-4c9b-be54-ccd0b945a7f6). This is the APK to test, screenshot and submit. |
 | Feature graphic | Done: `store-assets/feature-graphic-1200x1200.png` |
 | Preview video | **Not started** — needs the v1.3.0 APK on the emulator |
 | Store screenshots | **Still the old web captures** with clipped tab labels; retake on the emulator |
@@ -43,8 +43,8 @@ emulator -avd seeker_api35 -no-snapshot-load -no-window
 Then, in a second terminal:
 
 ```powershell
-eas build:list --platform android --limit 1
-adb install -r <downloaded v1.3.0 apk>
+# APK: https://expo.dev/artifacts/eas/dRRT9nZY95Ux6g-TAfzmb95nyIq6T2DWqwzuHbrLKb4.apk
+adb install -r seeker-depin-explorer-v1.3.0.apk
 maestro test .maestro/smoke.yaml
 ```
 
