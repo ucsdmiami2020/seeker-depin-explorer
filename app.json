@@ -2,7 +2,7 @@
   "expo": {
     "name": "Seeker DePIN Explorer",
     "slug": "solanoseekerrwaviewer",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "scheme": "seekerdepin",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -19,7 +19,7 @@
     },
     "android": {
       "package": "com.srblife.seekerdepinexplorer",
-      "versionCode": 3,
+      "versionCode": 4,
       "adaptiveIcon": {
         "backgroundColor": "#0B0B12",
         "foregroundImage": "./assets/android-icon-foreground.png",

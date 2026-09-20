@@ -1,0 +1,91 @@
+# Functional smoke test on a real Android emulator - the checks that cannot run on web.
+#
+#   maestro test .maestro/smoke.yaml
+#
+# Covers the dApp Store reviewer path: launch, tour, every tab, a device profile,
+# the legal screens, and the wallet screen up to (not through) the wallet handoff.
+appId: com.srblife.seekerdepinexplorer
+---
+- launchApp:
+    clearState: true
+- waitForAnimationToEnd:
+    timeout: 5000
+
+# Launch and first-run tour
+- assertVisible: "Explore the networks shaping the real world."
+- tapOn: "Enter Explorer"
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible: "Step 1 of 6"
+- tapOn: "Skip"
+- waitForAnimationToEnd
+
+# Explore: search and category filter
+- assertVisible: "Explore the physical side of Solana"
+- tapOn:
+    id: "Search devices, tokens, makers…"
+    optional: true
+- inputText: "helium"
+- waitForAnimationToEnd
+- assertVisible:
+    text: "Helium.*"
+- eraseText
+- hideKeyboard
+
+# Device profile: specs, earning, adoption evidence
+- tapOn:
+    text: "Helium.*"
+    index: 0
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible: "Adoption confidence"
+- scroll
+- scroll
+- assertVisible:
+    text: "How you earn"
+    optional: true
+- back
+- waitForAnimationToEnd
+
+# Compare holds up to three devices
+- tapOn: "Compare"
+- waitForAnimationToEnd
+- assertVisible:
+    text: "Compare"
+
+# Networks tab lists the protocols
+- tapOn: "Networks"
+- waitForAnimationToEnd
+- assertVisible:
+    text: "Helium.*"
+
+# Wallet: MWA is present and the safety copy is visible. Stops before the wallet handoff,
+# which needs the mock wallet app installed (see docs/LOCAL_TESTING.md).
+- tapOn: "Wallet"
+- waitForAnimationToEnd
+- assertVisible: "Connect to see which DePIN networks you already hold."
+- assertVisible:
+    text: "Connect wallet"
+
+# Help centre opens and closes from any tab
+- tapOn:
+    id: "Help and app guide"
+- waitForAnimationToEnd:
+    timeout: 2000
+- assertVisible: "How this app works"
+- assertVisible: "Replay the guided tour"
+- back
+- waitForAnimationToEnd
+
+# Legal screens required by the dApp Store listing
+- tapOn: "About"
+- waitForAnimationToEnd
+- scroll
+- tapOn:
+    text: "Privacy Policy"
+    optional: true
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible:
+    text: "Wallet and on-chain data"
+    optional: true

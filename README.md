@@ -8,6 +8,7 @@ A modern, interactive field guide to the physical hardware that plugs into Solan
 
 - 16 devices across 7 categories: Seeker, Saga, CUDIS Ring, BrushO toothbrush, Helium Mobile Indoor/Outdoor, Helium IoT (LoRaWAN), Hivemapper Bee, GEODNET base station, XNET CBRS radio, WeatherXM D1, Wingbits WB200, onocoy Onolink, Roam Rainier MAX60, NATIX VX360, Starpower Starplug
 - **Wallet tab (Mobile Wallet Adapter)** — connect Phantom / Solflare / Backpack or Seed Vault, read SOL and SPL balances from mainnet or devnet, see which of the catalog's DePIN networks you already hold, and sign an off-chain ownership proof. The app never sees a private key and never builds or submits a transaction.
+- **Guided tour and help centre** — a six-step interactive tour opens on first launch explaining what the app is for, how the adoption score is built and what the wallet does; a floating help button reopens the full guide at any time. The tour state is held in memory only, so nothing is written to the device.
 - **Adoption confidence score (0–10)** on every device — five evidence-based factors (tenure, installed base, independent reviews, community, reward track record) with the evidence shown in-app, a tier badge (Established / Growing / Early / Very new), sort + filter on Explore, a Compare row, and a methodology screen. Data lives in `src/data/adoption.ts`; rubric in `src/lib/adoption.ts`.
 - Welcome screen on launch introducing devices, networks and adoption signals
 - Explore tab: hero stats, search, category chips, Featured / Newest / Price sort, favourites filter

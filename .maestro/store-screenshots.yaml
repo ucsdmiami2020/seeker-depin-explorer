@@ -1,0 +1,78 @@
+# Captures the Solana dApp Store listing screenshots from a real Android emulator.
+#
+#   maestro test .maestro/store-screenshots.yaml
+#
+# Output lands next to the flow as store-NN-*.png (1080x2340 on a Pixel 7 AVD).
+# Replaces the old web-browser captures, whose tab-bar labels were clipped.
+appId: com.srblife.seekerdepinexplorer
+---
+- launchApp:
+    clearState: false
+- waitForAnimationToEnd:
+    timeout: 4000
+
+# Welcome screen, before the tour opens
+- takeScreenshot: store-01-welcome
+- tapOn: "Enter Explorer"
+- waitForAnimationToEnd:
+    timeout: 3000
+
+# The guided tour explains the app to a first-time user (and to a reviewer)
+- assertVisible: "A field guide to Solana hardware"
+- takeScreenshot: store-02-tour-intro
+- tapOn: "Next"
+- waitForAnimationToEnd
+- tapOn: "Next"
+- waitForAnimationToEnd
+- assertVisible: "Adoption confidence, not hype"
+- takeScreenshot: store-03-tour-adoption
+- tapOn: "Skip"
+- waitForAnimationToEnd:
+    timeout: 2000
+
+# Explore
+- assertVisible: "Explore the physical side of Solana"
+- takeScreenshot: store-04-explore
+- scroll
+- takeScreenshot: store-05-explore-list
+
+# Device detail
+- tapOn:
+    text: "Helium.*"
+    index: 0
+- waitForAnimationToEnd:
+    timeout: 3000
+- takeScreenshot: store-06-device-detail
+- scroll
+- scroll
+- takeScreenshot: store-07-device-earn
+- back
+
+# Compare
+- tapOn: "Compare"
+- waitForAnimationToEnd
+- takeScreenshot: store-08-compare
+
+# Networks
+- tapOn: "Networks"
+- waitForAnimationToEnd
+- takeScreenshot: store-09-networks
+
+# Wallet (not connected - safe to show, no address on screen)
+- tapOn: "Wallet"
+- waitForAnimationToEnd
+- takeScreenshot: store-10-wallet
+
+# Help centre reachable from every tab
+- tapOn:
+    id: "Help and app guide"
+- waitForAnimationToEnd:
+    timeout: 2000
+- assertVisible: "How this app works"
+- takeScreenshot: store-11-help
+- back
+
+# About and legal
+- tapOn: "About"
+- waitForAnimationToEnd
+- takeScreenshot: store-12-about

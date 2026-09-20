@@ -5,6 +5,7 @@ import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AppStateProvider } from '../src/state/AppState';
 import { WalletProvider } from '../src/state/WalletProvider';
+import { HelpProvider } from '../src/state/HelpProvider';
 import { colors, font, spacing } from '../src/theme';
 
 /**
@@ -29,24 +30,26 @@ export default function RootLayout() {
     <SafeAreaProvider>
       <AppStateProvider>
         <WalletProvider>
-          <StatusBar style="light" />
-          <Stack
-            initialRouteName="welcome"
-            screenOptions={{
-              headerStyle: { backgroundColor: colors.bg },
-              headerTintColor: colors.text,
-              headerTitleStyle: { fontWeight: '700' },
-              headerShadowVisible: false,
-              contentStyle: { backgroundColor: colors.bg },
-            }}
-          >
-            <Stack.Screen name="welcome" options={{ headerShown: false }} />
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="device/[id]" options={{ title: '', headerTransparent: true }} />
-            <Stack.Screen name="legal/[doc]" options={{ title: 'Legal' }} />
-            <Stack.Screen name="methodology" options={{ title: 'Adoption confidence' }} />
-            <Stack.Screen name="+not-found" options={{ title: 'Not found' }} />
-          </Stack>
+          <HelpProvider>
+            <StatusBar style="light" />
+            <Stack
+              initialRouteName="welcome"
+              screenOptions={{
+                headerStyle: { backgroundColor: colors.bg },
+                headerTintColor: colors.text,
+                headerTitleStyle: { fontWeight: '700' },
+                headerShadowVisible: false,
+                contentStyle: { backgroundColor: colors.bg },
+              }}
+            >
+              <Stack.Screen name="welcome" options={{ headerShown: false }} />
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen name="device/[id]" options={{ title: '', headerTransparent: true }} />
+              <Stack.Screen name="legal/[doc]" options={{ title: 'Legal' }} />
+              <Stack.Screen name="methodology" options={{ title: 'Adoption confidence' }} />
+              <Stack.Screen name="+not-found" options={{ title: 'Not found' }} />
+            </Stack>
+          </HelpProvider>
         </WalletProvider>
       </AppStateProvider>
     </SafeAreaProvider>
