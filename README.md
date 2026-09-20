@@ -140,7 +140,7 @@ Later releases can also be submitted with the portal-backed CLI (`@solana-mobile
 
 Docs: https://docs.solanamobile.com/dapp-store/intro
 
-Android package id is `com.srblife.seekerdepinexplorer` (change in `app.json` before your first release — it's permanent per dApp Store listing).
+Android package id is `app.seekerdepin.explorer` (change in `app.json` before your first release — it's permanent per dApp Store listing).
 
 ## Roadmap → v2
 

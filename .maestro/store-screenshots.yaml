@@ -4,7 +4,7 @@
 #
 # Output lands next to the flow as store-NN-*.png (1080x2340 on a Pixel 7 AVD).
 # Replaces the old web-browser captures, whose tab-bar labels were clipped.
-appId: com.srblife.seekerdepinexplorer
+appId: app.seekerdepin.explorer
 ---
 - launchApp:
     clearState: false

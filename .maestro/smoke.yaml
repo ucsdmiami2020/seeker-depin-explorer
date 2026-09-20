@@ -4,7 +4,7 @@
 #
 # Covers the dApp Store reviewer path: launch, tour, every tab, a device profile,
 # the legal screens, and the wallet screen up to (not through) the wallet handoff.
-appId: com.srblife.seekerdepinexplorer
+appId: app.seekerdepin.explorer
 ---
 - launchApp:
     clearState: true
