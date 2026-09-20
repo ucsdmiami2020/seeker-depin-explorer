@@ -3,7 +3,7 @@
 Everything below maps to a documented requirement or a known rejection reason. Tick them in order.
 Reference: [Submit a New App](https://docs.solanamobile.com/dapp-store/submit-new-app) · [Build and Sign an APK](https://docs.solanamobile.com/dapp-store/build-and-sign-an-apk) · [Publisher Policy](https://legal.solanamobile.com/publisher-policy-web)
 
-Current build: **v1.2.0, versionCode 4** (Mobile Wallet Adapter + read-only on-chain balances, first-run guided tour and in-app help centre).
+Current build: **v1.3.0, versionCode 5** (wallet, guided tour and help centre, publisher Seeker ID, Play Solana PSG1).
 
 ## A. One-time setup
 
@@ -58,7 +58,7 @@ cd android && ./gradlew assembleRelease
 - The two checks below need the Android SDK build-tools (`apksigner`, `aapt`), which EAS does not install on your machine. Without them you can still see the keystore SHA-256 fingerprint in `eas credentials`. In PowerShell, replace `| grep -E "…"` with `| Select-String "package|uses-permission|sdkVersion|targetSdkVersion"`.
 - [ ] Verify it is release-signed with **your** key, not debug:
   `apksigner verify --print-certs app-release.apk` (certificate DN must be yours, not `CN=Android Debug`).
-- [ ] Verify the manifest: `aapt dump badging app-release.apk | grep -E "package|uses-permission|sdkVersion|targetSdkVersion"` — expect `versionCode='4'` (or higher), `targetSdkVersion:'36'`, and still only `INTERNET` + `VIBRATE` (MWA needs no extra permission).
+- [ ] Verify the manifest: `aapt dump badging app-release.apk | grep -E "package|uses-permission|sdkVersion|targetSdkVersion"` — expect `versionCode='5'` (or higher), `targetSdkVersion:'36'`, and still only `INTERNET` + `VIBRATE` (MWA needs no extra permission).
 - [ ] Install on an API 34+ arm64 emulator or a Seeker and run the full device checklist in `HACKATHON.md` — including the wallet flows, which cannot be tested on web.
 
 ## C. Listing assets (in `store-assets/`)
@@ -74,7 +74,7 @@ Suggested listing copy:
 
 - **Name:** Seeker DePIN Explorer
 - **Short description (≤30 chars):** Explore Solana DePIN hardware
-- **Long description:** A field guide to the physical hardware that plugs into Solana — 16 devices across 13 networks, from the Seeker and Saga phones and the CUDIS ring to Helium hotspots, the Hivemapper Bee dashcam, GEODNET and onocoy GNSS stations, XNET radios, WeatherXM weather stations, Wingbits flight trackers and more. Compare specs and prices side by side, check each device's adoption-confidence score, see how it earns, follow each network's timeline, and jump to the vendor. Connect a wallet to see which of those networks you already hold — balances are read straight from Solana, and the app never sees your keys or sends a transaction.
+- **Long description:** A field guide to the physical hardware that plugs into Solana — 17 devices across 14 networks, from the Seeker and Saga phones and the CUDIS ring to Helium hotspots, the Hivemapper Bee dashcam, GEODNET and onocoy GNSS stations, XNET radios, WeatherXM weather stations, Wingbits flight trackers and the Play Solana PSG1 handheld. Compare specs and prices side by side, check each device's adoption-confidence score, see how it earns, follow each network's timeline, and jump to the vendor. Connect a wallet to see which of those networks you already hold — balances are read straight from Solana, and the app never sees your keys or sends a transaction.
 - **Category:** Utilities / Reference (DePIN)
 - **Age rating:** Everyone
 - **Testing instructions for reviewers:** No login or account required. A six-step guided tour opens automatically on first launch and explains the whole app; the green help button (bottom right of every tab) reopens it. Launch → Enter Explorer → tap any device → tap a vendor link (opens in Chrome Custom Tab). Compare tab: add up to three devices. Wallet tab is optional: tap Connect wallet and approve in Phantom/Solflare/Backpack to see SOL and DePIN token balances — a Devnet toggle is provided so no mainnet funds are needed, and "Sign ownership proof" signs an off-chain message only (no transaction, no fee). About → Legal shows Privacy Policy, Terms, Copyright.

@@ -623,6 +623,50 @@ export const devices: Device[] = [
       { label: 'DePIN Scan', url: 'https://depinscan.io/projects/starpower' },
     ],
   },
+  {
+    id: 'psg1',
+    adoption: adoption['psg1'],
+    name: 'PSG1 (Play Solana Gen1)',
+    maker: 'Play Solana',
+    category: 'gaming',
+    tagline: 'Handheld Solana console with an on-device hardware wallet',
+    description:
+      'PSG1 is a Game Boy-shaped Android handheld built around a Solana wallet: a rear fingerprint sensor unlocks the built-in SvalGuard hardware wallet, so game purchases and in-game assets are signed on the device itself. It runs EchOS, a custom Android layer, and installs titles only from PlayVerse, Play Solana\'s curated store. Shipping began on 6 October 2025 at $329, with partner editions (JUP, BONK, Pudgy Penguins, MonkeDAO and others) sold alongside the standard unit.',
+    status: 'shipping',
+    price: '$329',
+    priceNote: 'Partner editions such as the Pudgy Penguins unit list higher (about $349); check playsolana.com.',
+    releaseYear: 2025,
+    token: { symbol: 'PLAY', role: 'Ecosystem token for the PlayVerse store and player rewards' },
+    network: 'playsolana',
+    icon: { set: 'mci', name: 'gamepad-variant' },
+    specs: [
+      { label: 'Display', value: '3.92" OLED, 1240×1080, capacitive touch' },
+      { label: 'Chipset', value: 'Rockchip RK3588S octa-core ARM' },
+      { label: 'Memory', value: '8 GB LPDDR4X / 128 GB eMMC' },
+      { label: 'Connectivity', value: 'Wi-Fi 6 · Bluetooth 5.4' },
+      { label: 'Security', value: 'SvalGuard hardware wallet · rear fingerprint sensor' },
+      { label: 'OS', value: 'EchOS (Android-based)' },
+      { label: 'App store', value: 'PlayVerse only — consumer units do not sideload APKs' },
+      { label: 'Developer access', value: 'PlayGate submissions · Unity SDK · DevKit units' },
+    ],
+    earn: [
+      'PlayVerse titles distribute $PLAY and in-game assets to players',
+      'Partner editions bundle ecosystem perks from the collaborating project',
+      'Rewards depend entirely on the individual game and are not guaranteed',
+    ],
+    chainNote:
+      'A gaming console rather than DePIN infrastructure: it sells no coverage, data or sensing. It is listed here because it is Solana hardware with an on-device wallet.',
+    seekerReady: false,
+    seekerNote:
+      'PSG1 is its own Android device, not a Seeker accessory. Because consumer units install only from PlayVerse, this catalog app cannot run on it.',
+    highlights: ['On-device hardware wallet', '3.92" OLED', 'Shipped Oct 2025', 'PlayVerse games only'],
+    milestones: [
+      { date: '2025-08', title: 'Ship date announced for the first Web3 handheld' },
+      { date: '2025-10', title: 'PSG1 begins shipping at $329' },
+      { date: '2025', title: '$PLAY token launches alongside the console' },
+    ],
+    links: [{ label: 'playsolana.com', url: 'https://www.playsolana.com/' }],
+  },
 ];
 
 export const categoryMeta: Record<string, { label: string; icon: string; blurb: string }> = {
@@ -633,6 +677,7 @@ export const categoryMeta: Record<string, { label: string; icon: string; blurb: 
   positioning: { label: 'Positioning', icon: 'crosshairs-gps', blurb: 'GNSS stations for centimetre RTK' },
   sensing: { label: 'Sensing', icon: 'radar', blurb: 'Weather, aviation and vehicle sensors that sell data' },
   energy: { label: 'Energy', icon: 'lightning-bolt', blurb: 'Plugs and batteries that meter and shift home power' },
+  gaming: { label: 'Gaming', icon: 'gamepad-variant', blurb: 'Solana-native consoles with on-device wallets' },
 };
 
 export const getDevice = (id: string) => devices.find((d) => d.id === id);

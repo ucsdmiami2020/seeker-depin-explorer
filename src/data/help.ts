@@ -19,7 +19,7 @@ export const TOUR: HelpTopic[] = [
     icon: { set: 'ion', name: 'compass-outline' },
     title: 'A field guide to Solana hardware',
     body:
-      'DePIN is the part of crypto you can hold: phones, rings, hotspots, dashcams and sensors that earn on Solana. This app catalogues 16 of them across 13 networks, with specs, prices and how each one earns.',
+      'DePIN is the part of crypto you can hold: phones, rings, hotspots, dashcams and sensors that earn on Solana. This app catalogues 17 of them across 14 networks, with specs, prices and how each one earns.',
     action: 'No account, no signup, nothing to install.',
   },
   {

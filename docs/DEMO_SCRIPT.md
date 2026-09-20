@@ -17,7 +17,7 @@ Shot: welcome screen, then Enter Explorer.
 
 ### 0:15–0:40 — The catalog
 
-> "Seeker DePIN Explorer is a field guide to 16 devices across 13 Solana DePIN networks — phones, rings, hotspots,
+> "Seeker DePIN Explorer is a field guide to 17 devices across 14 Solana networks — phones, rings, hotspots,
 > dashcams, weather stations."
 
 Shot: scroll Explore. Tap a category chip. Tap the adoption sort.

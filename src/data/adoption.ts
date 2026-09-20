@@ -171,4 +171,13 @@ export const adoption: Record<string, Adoption> = {
     [0, 'STAR rewards accrue in-app; tradable-token history is very short — treat economics as unproven.'],
     ['YouTube: "Starpower Starplug review"', 'X: @Starpowerworld', 'DePIN Scan: starpower'],
   ),
+  psg1: a(
+    '2026-09',
+    [1, 'Shipping since 6 October 2025, so about a year on the market.'],
+    [0, 'No unit numbers published by Play Solana; sales volume unverifiable.'],
+    [1, 'Launch coverage from Dataconomy, CCN and Cryptonomist; few independent long-term hands-on reviews.'],
+    [1, 'Active X and Discord presence plus NFT-community partner editions; smaller than Seeker or Helium.'],
+    [0, '$PLAY is live, but player earnings depend on individual PlayVerse titles and have no track record yet.'],
+    ['playsolana.com/products', 'X: @playsolana', 'YouTube: "PSG1 review"'],
+  ),
 };

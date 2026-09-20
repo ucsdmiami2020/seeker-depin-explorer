@@ -1,4 +1,12 @@
-export type Category = 'phone' | 'wearable' | 'wireless' | 'mapping' | 'positioning' | 'sensing' | 'energy';
+export type Category =
+  | 'phone'
+  | 'wearable'
+  | 'wireless'
+  | 'mapping'
+  | 'positioning'
+  | 'sensing'
+  | 'energy'
+  | 'gaming';
 
 export type DeviceStatus = 'shipping' | 'preorder' | 'discontinued';
 

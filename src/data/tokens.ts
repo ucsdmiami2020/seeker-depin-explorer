@@ -32,6 +32,7 @@ export const DEPIN_TOKENS: readonly DePinToken[] = [
   { mint: 'onoyC1ZjHNtT2tShqvVSg5WEcQDbu5zht6sdU9Nwjrc', symbol: 'ONO', name: 'onocoy', networkId: 'onocoy' },
   { mint: 'RoamA1USA8xjvpTJZ6RvvxyDRzNh6GCA1zVGKSiMVkn', symbol: 'ROAM', name: 'Roam Token', networkId: 'roam' },
   { mint: 'FRySi8LPkuByB7VPSCCggxpewFUeeJiwEGRKKuhwpKcX', symbol: 'NATIX', name: 'NATIX Network', networkId: 'natix' },
+  { mint: 'PLAYs3GSSadH2q2JLS7djp7yzeT75NK78XgrE5YLrfq', symbol: 'PLAY', name: 'Play Solana', networkId: 'playsolana' },
 ];
 
 /** Networks in the catalog with no tracked mint — surfaced in the Wallet tab. */

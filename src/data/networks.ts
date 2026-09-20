@@ -163,6 +163,18 @@ export const networks: Network[] = [
     icon: { set: 'mci', name: 'home-lightning-bolt' },
     links: [{ label: 'DePIN Scan', url: 'https://depinscan.io/projects/starpower' }],
   },
+  {
+    id: 'playsolana',
+    name: 'Play Solana',
+    chain: 'Solana',
+    category: 'gaming',
+    token: 'PLAY',
+    summary: 'Handheld console plus a curated game store with a tokenised player economy.',
+    whatItDoes:
+      'Play Solana builds the PSG1 handheld and PlayVerse, the curated store that is the only way to install titles on consumer units. Games are submitted through PlayGate and built against a Unity SDK, and $PLAY is the ecosystem token used for store and player rewards. The console signs on-chain actions with its built-in SvalGuard wallet instead of a connected phone.',
+    icon: { set: 'mci', name: 'gamepad-variant' },
+    links: [{ label: 'playsolana.com', url: 'https://www.playsolana.com/' }],
+  },
 ];
 
 export const getNetwork = (id: string) => networks.find((n) => n.id === id);

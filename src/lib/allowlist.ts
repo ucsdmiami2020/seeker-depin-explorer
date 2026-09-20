@@ -25,6 +25,7 @@ export const ALLOWED_HOSTS: ReadonlySet<string> = new Set<string>([
   'weroam.xyz',
   'natix.network',
   'starpower-market.myshopify.com',
+  'playsolana.com',
   'depinscan.io',
 ]);
 

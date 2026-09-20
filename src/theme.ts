@@ -23,6 +23,7 @@ export const categoryColors: Record<string, [string, string]> = {
   positioning: ['#FF6EC7', '#B0287F'],
   sensing: ['#7DF9FF', '#2A8FA8'],
   energy: ['#FFE066', '#D19A00'],
+  gaming: ['#FF7A45', '#B23A0E'],
 };
 
 export const spacing = { xs: 4, sm: 8, md: 12, lg: 16, xl: 24, xxl: 32 };
