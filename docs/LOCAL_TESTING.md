@@ -82,6 +82,21 @@ appear. "Sign ownership proof" exercises `signMessages`, which is the only signi
 For balances that match a real account, use an emulator image with the Play Store, install Phantom or
 Solflare, and connect a wallet you control. Never use a wallet holding significant funds for testing.
 
+## Capturing a screenshot by hand
+
+Do NOT redirect binary output in Windows PowerShell: `adb exec-out screencap -p > shot.png` writes
+UTF-16 and produces a corrupt file that decoders reject with a misleading out-of-memory error. Pull
+the file instead:
+
+```powershell
+adb shell screencap -p /sdcard/shot.png
+adb pull /sdcard/shot.png shot.png
+adb shell rm /sdcard/shot.png
+```
+
+The `seeker_api35` AVD renders at 1080x2400, which satisfies the dApp Store minimum of 1080 px.
+Keep every listing screenshot at that one size so the aspect ratios match.
+
 ## Useful checks on the installed APK
 
 ```powershell

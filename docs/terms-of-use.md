@@ -35,4 +35,4 @@ To the maximum extent permitted by law, the app is provided without warranties o
 We may update the app or these terms at any time. Continued use after an update constitutes acceptance. You may stop using the app at any time by uninstalling it.
 
 ---
-Rene Chacon · rchac005@gmail.com · https://ucsdmiami2020.github.io/seeker-depin-legal/
+Rene Chacon · ucsdmiami2020.skr · rchac005@gmail.com · https://ucsdmiami2020.github.io/seeker-depin-legal/

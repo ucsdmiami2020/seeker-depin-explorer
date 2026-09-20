@@ -6,6 +6,9 @@
  */
 export const PUBLISHER = {
   name: 'Rene Chacon',
+  /** Seeker ID (AllDomains .skr). Owned on-chain by 8jTpgM8S6TUiGXD9Cor7wAKA2QF5ufcGUjEHkWmzG6CL. */
+  seekerId: 'ucsdmiami2020.skr',
+  seekerIdOwner: '8jTpgM8S6TUiGXD9Cor7wAKA2QF5ufcGUjEHkWmzG6CL',
   contactEmail: 'rchac005@gmail.com',
   website: 'https://ucsdmiami2020.github.io/seeker-depin-legal/',
   lastUpdated: '2026-09-11',
@@ -108,7 +111,7 @@ export const legalDocs: Record<LegalDocId, LegalDoc> = {
     sections: [
       {
         heading: 'Copyright',
-        body: `© ${new Date().getFullYear()} ${PUBLISHER.name}. All rights reserved. Application code and original editorial content may not be copied, modified or redistributed without written permission. Third-party open-source components remain under their own licences.`,
+        body: `© ${new Date().getFullYear()} ${PUBLISHER.name} (Seeker ID ${PUBLISHER.seekerId}). All rights reserved. Application code and original editorial content may not be copied, modified or redistributed without written permission. Third-party open-source components remain under their own licences.`,
       },
       {
         heading: 'Trademarks',

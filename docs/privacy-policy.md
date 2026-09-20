@@ -31,4 +31,4 @@ The app is informational and suitable for general audiences. It is not directed 
 We will update this policy if the app's data practices change, and note the date above. Questions: rchac005@gmail.com.
 
 ---
-Rene Chacon · rchac005@gmail.com · https://ucsdmiami2020.github.io/seeker-depin-legal/
+Rene Chacon · ucsdmiami2020.skr · rchac005@gmail.com · https://ucsdmiami2020.github.io/seeker-depin-legal/

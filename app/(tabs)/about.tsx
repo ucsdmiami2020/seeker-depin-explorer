@@ -4,9 +4,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import Constants from 'expo-constants';
 import { Link } from 'expo-router';
-import { colors, font, spacing } from '../../src/theme';
+import { colors, font, radius, spacing } from '../../src/theme';
 import { openExternal } from '../../src/lib/links';
-import { Bullet, Card, SectionTitle } from '../../src/components/ui';
+import { Bullet, Card, SectionTitle, tap } from '../../src/components/ui';
+import { PUBLISHER } from '../../src/data/legal';
 
 const ROADMAP = [
   'Reward history per device, read from each network on-chain',
@@ -18,6 +19,12 @@ const ROADMAP = [
 export default function About() {
   const insets = useSafeAreaInsets();
   const version = Constants.expoConfig?.version ?? '1.0.0';
+
+  function verifySeekerId() {
+    tap();
+    openExternal(`https://explorer.solana.com/address/${PUBLISHER.seekerIdOwner}`);
+  }
+
   return (
     <ScrollView
       style={{ flex: 1, backgroundColor: colors.bg }}
@@ -31,6 +38,33 @@ export default function About() {
           A field guide to the physical hardware that plugs into Solana: the phones that hold your keys, the
           wearables that pay you for healthy habits, and the radios, cameras and antennas that sell real-world
           coverage for tokens. Built for the Solana Seeker and any Android device.
+        </Text>
+      </Card>
+
+      <SectionTitle>Publisher</SectionTitle>
+      <Card>
+        <View style={styles.pubRow}>
+          <View style={styles.pubMark}>
+            <Ionicons name="person-circle-outline" size={22} color={colors.solanaGreen} />
+          </View>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.pubName}>{PUBLISHER.name}</Text>
+            <Text style={styles.pubMeta}>{PUBLISHER.contactEmail}</Text>
+          </View>
+        </View>
+
+        <Pressable onPress={verifySeekerId} style={styles.seekerRow} accessibilityRole="link">
+          <View style={styles.seekerBadge}>
+            <Ionicons name="finger-print" size={15} color={colors.bg} />
+            <Text style={styles.seekerId}>{PUBLISHER.seekerId}</Text>
+          </View>
+          <Text style={styles.verifyText}>Verify owner</Text>
+          <Ionicons name="open-outline" size={15} color={colors.solanaBlue} />
+        </Pressable>
+
+        <Text style={styles.pubNote}>
+          This app is published under the Seeker ID above. Tap to open the Solana explorer to see the wallet that
+          holds it.
         </Text>
       </Card>
 
@@ -102,4 +136,28 @@ const styles = StyleSheet.create({
   linkRow: { flexDirection: 'row', alignItems: 'center', paddingVertical: 8 },
   linkText: { ...font.body, color: colors.solanaBlue, marginLeft: 10 },
   foot: { ...font.caption, color: colors.textFaint },
+  pubRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
+  pubMark: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: colors.chip,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  pubName: { ...font.subtitle, color: colors.text },
+  pubMeta: { ...font.caption, color: colors.textMuted, marginTop: 2 },
+  seekerRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, marginTop: spacing.lg },
+  seekerBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: colors.solanaGreen,
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    borderRadius: radius.sm,
+  },
+  seekerId: { color: colors.bg, fontWeight: '800', fontSize: 13 },
+  verifyText: { ...font.caption, color: colors.solanaBlue, marginLeft: 'auto' },
+  pubNote: { ...font.caption, color: colors.textFaint, marginTop: spacing.md, lineHeight: 18 },
 });

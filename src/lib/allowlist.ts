@@ -7,6 +7,7 @@
 export const ALLOWED_HOSTS: ReadonlySet<string> = new Set<string>([
   'solanamobile.com',
   'docs.solanamobile.com',
+  'explorer.solana.com',
   'github.com',
   'cudis.xyz',
   'brusho.io',

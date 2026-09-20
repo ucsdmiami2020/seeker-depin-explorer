@@ -4,7 +4,7 @@ _Last updated 2026-09-11_
 
 ## Copyright
 
-© 2026 Rene Chacon. All rights reserved. Application code and original editorial content may not be copied, modified or redistributed without written permission. Third-party open-source components remain under their own licences.
+© 2026 Rene Chacon (Seeker ID ucsdmiami2020.skr). All rights reserved. Application code and original editorial content may not be copied, modified or redistributed without written permission. Third-party open-source components remain under their own licences.
 
 ## Trademarks
 
@@ -19,4 +19,4 @@ The app intentionally contains no vendor product photography or logos. Device an
 If you believe content in the app infringes your rights, contact rchac005@gmail.com with the item, your claim and your contact details, and we will respond promptly.
 
 ---
-Rene Chacon · rchac005@gmail.com · https://ucsdmiami2020.github.io/seeker-depin-legal/
+Rene Chacon · ucsdmiami2020.skr · rchac005@gmail.com · https://ucsdmiami2020.github.io/seeker-depin-legal/
