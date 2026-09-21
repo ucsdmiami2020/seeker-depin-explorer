@@ -5,13 +5,12 @@
  * which controls are actually enforced in code, and what is knowingly accepted. Every claim here
  * must correspond to something real in the repository — if a control is removed, remove the claim.
  *
- * Last reviewed: 2026-09-21 against v1.3.0 (versionCode 5).
+ * Last reviewed: 2026-09-21. The version badge is read from the app config at runtime.
  */
 import type { IconSet } from './types';
 
 export const REVIEW = {
   date: '21 September 2026',
-  version: 'v1.3.0 (versionCode 5)',
   standard: 'OWASP MASVS-L1',
   repo: 'https://github.com/ucsdmiami2020/seeker-depin-explorer',
 };

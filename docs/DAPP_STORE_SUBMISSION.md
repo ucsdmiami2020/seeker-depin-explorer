@@ -54,7 +54,7 @@ cd android && ./gradlew assembleRelease
 # → android/app/build/outputs/apk/release/app-release.apk
 ```
 
-- [ ] **Set the RPC endpoint in EAS, not in your shell.** EAS cloud builds do not receive environment variables from your terminal, so `EXPO_PUBLIC_SOLANA_RPC=… eas build` silently falls back to the public RPC. Use `eas env:set … --environment production` (above); the `dapp-store` profile in `eas.json` reads the `production` environment. The public endpoints are rate-limited, and a reviewer hitting a 429 sees an app that looks broken.
+- [ ] **Set the RPC endpoint in EAS, not in your shell.** EAS cloud builds do not receive environment variables from your terminal, so `EXPO_PUBLIC_SOLANA_RPC=… eas build` silently falls back to the public RPC. Use `eas env:set … --environment production` (above); the `dapp-store` profile in `eas.json` reads the `production` environment. The public endpoints are rate-limited, and a reviewer hitting a 429 sees an app that looks broken. **The value is inlined into the JavaScript bundle and is readable by anyone who unzips the APK**, so never ship an endpoint whose URL contains an API key. Use one restricted by domain/bundle-id allow-list, or put a proxy in front of it.
 - The two checks below need the Android SDK build-tools (`apksigner`, `aapt`), which EAS does not install on your machine. Without them you can still see the keystore SHA-256 fingerprint in `eas credentials`. In PowerShell, replace `| grep -E "…"` with `| Select-String "package|uses-permission|sdkVersion|targetSdkVersion"`.
 - [ ] Verify it is release-signed with **your** key, not debug:
   `apksigner verify --print-certs app-release.apk` (certificate DN must be yours, not `CN=Android Debug`).

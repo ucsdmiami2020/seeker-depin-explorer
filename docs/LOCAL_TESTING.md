@@ -79,6 +79,9 @@ adb install -r fakewallet\build\outputs\apk\debug\fakewallet-debug.apk
 Then in the app: **Wallet → Connect wallet**, approve in the mock wallet, and the address and balances
 appear. "Sign ownership proof" exercises `signMessages`, which is the only signing this app performs.
 
+Any EXPO_PUBLIC_ value is baked into the bundle in clear text, so use a disclosable endpoint for test
+builds too.
+
 For balances that match a real account, use an emulator image with the Play Store, install Phantom or
 Solflare, and connect a wallet you control. Never use a wallet holding significant funds for testing.
 

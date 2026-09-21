@@ -94,7 +94,7 @@ Wallet → Connect wallet → approve → check the address, balances and "Sign 
    ```powershell
    eas env:set --name EXPO_PUBLIC_SOLANA_RPC --value https://your-endpoint --environment production --visibility plaintext
    ```
-   Then rebuild.
+   Then rebuild. **The value is inlined into the JavaScript bundle and is readable by anyone who unzips the APK**, so never ship an endpoint whose URL contains an API key. Use one restricted by domain/bundle-id allow-list, or put a proxy in front of it.
 3. **API key.** The publisher API key was pasted into a chat transcript — rotate it in the portal.
    It is only needed for the CLI submission path, not the portal.
 4. **Keystore backup.** The release key lives only on EAS. `eas credentials` → Android → download.

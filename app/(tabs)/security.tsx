@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import Constants from 'expo-constants';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, font, radius, spacing } from '../../src/theme';
 import { Card, DeviceIcon, SectionTitle, tap } from '../../src/components/ui';
@@ -26,6 +27,9 @@ function StatePill({ state }: { state: ControlState }) {
 export default function Security() {
   const insets = useSafeAreaInsets();
   const [open, setOpen] = useState<string | null>(GROUPS[0]?.id ?? null);
+  // Read from the app config so the badge cannot drift from the shipped build.
+  const version = Constants.expoConfig?.version ?? '?';
+  const versionCode = Constants.expoConfig?.android?.versionCode ?? '?';
 
   const enforced = GROUPS.flatMap((g) => g.controls).filter((c) => c.state === 'enforced').length;
   const accepted = GROUPS.flatMap((g) => g.controls).filter((c) => c.state === 'accepted').length;
@@ -48,7 +52,7 @@ export default function Security() {
           </Text>
         </View>
         <Text style={styles.reviewMeta}>
-          {REVIEW.version} · {enforced} controls enforced · {accepted} risks accepted
+          v{version} (versionCode {versionCode}) · {enforced} controls enforced · {accepted} risks accepted
         </Text>
       </Card>
 
