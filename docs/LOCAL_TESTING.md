@@ -59,8 +59,11 @@ maestro test .maestro/store-screenshots.yaml
 ```
 
 - `smoke.yaml` walks the reviewer path and asserts the screens that cannot be checked on web.
-- `store-screenshots.yaml` writes `store-NN-*.png` at device resolution. Copy the ones you want into
-  `store-assets/` to replace the web captures, whose tab-bar labels were clipped.
+- `store-screenshots.yaml` writes `store-NN-*.png` at device resolution. Maestro puts them in its
+  debug run folder, not the working directory:
+  `%USERPROFILE%.maestro	ests<timestamp>store-screenshots	akeScreenshot`.
+  Copy the ones you want into `store-assets/` to replace the web captures, whose tab-bar labels
+  were clipped.
 - `maestro studio` opens an interactive inspector for writing new flows against the running emulator.
 
 ## Testing the wallet flow with a mock wallet
