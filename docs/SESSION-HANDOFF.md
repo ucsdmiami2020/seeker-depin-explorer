@@ -14,9 +14,9 @@ Where the dApp Store submission stands, and what to do next session.
 | Security review | **Done** — 6 findings, 3 fixed, 3 accepted. See `SECURITY-REVIEW.md`, section "Second review". |
 | Security tab | **Shipped** — data-driven from `src/data/security.ts`, rendering verified |
 | Feature graphic | Done: `store-assets/feature-graphic-1200x1200.png` |
-| APK v1.4.0 | **Was building at shutdown** — [build c3b5b17b](https://expo.dev/accounts/ucsdmiami2020s-team/projects/solanoseekerrwaviewer/builds/c3b5b17b-a079-4144-b871-a205023981e6). EAS builds in the cloud, so it finished without this machine. |
-| Store screenshots | Pipeline **proven** at 1080×2400 with legible tab labels, but the final set was never captured — the run was still waiting on the build |
-| Preview video | Flow written (`.maestro/preview-video.yaml`), not yet recorded |
+| APK v1.4.0 | **Built OK** — [build c3b5b17b](https://expo.dev/accounts/ucsdmiami2020s-team/projects/solanoseekerrwaviewer/builds/c3b5b17b-a079-4144-b871-a205023981e6). EAS builds in the cloud, so it finished without this machine. |
+| Store screenshots | 7 of 14 captured at 1080×2400 (welcome, tour, explore, device detail). The run stops at the back-button bug below. |
+| Preview video | Flow runs and records (preview.mp4, 2.9 MB) but stops early at the same bug |
 
 ## Pick up here
 
@@ -76,6 +76,35 @@ adb install -r app\build\outputs\apk\debug\app-debug.apk
 ```
 
 Then Wallet → Connect wallet → approve → check the address, balances and "Sign ownership proof".
+
+## P1 bug found on device: back exits the app
+
+Captured on the emulator with v1.4.0. Open any device page from Explore, press the Android back
+button, and the app **closes** instead of returning to the catalog. Both Maestro flows died at the
+same step, and the failure screenshot is the Android home screen.
+
+It is not a crash. `adb logcat -b crash` is empty and the main buffer shows
+`AndroidRuntime: VM exiting with result code 0`, so the activity finished cleanly — the back press
+went to the system instead of popping the JavaScript navigation stack.
+
+Evidence: `%USERPROFILE%.maestro	ests6-09-21_083538preview-videoscreenshots`
+
+**Prime suspect:** `predictiveBackGestureEnabled: true` in `app.json` on API 35. With predictive
+back enabled, Android drives `OnBackInvokedCallback`; if the navigation stack does not register
+one, the system default (finish the activity) wins. Unverified — do not treat as diagnosed.
+
+Next steps, in order:
+
+1. Reproduce by hand: `adb install` v1.4.0, tap a device, press back. Confirm it exits.
+2. Try `predictiveBackGestureEnabled: false` in `app.json`, rebuild, retest. If back now returns to
+   the catalog, that is the cause.
+3. If it still exits, check `react-native-screens` / expo-router predictive-back support for SDK 57
+   and whether `enableOnBackInvokedCallback` is reaching the manifest.
+4. Re-run both Maestro flows once back works; they should then finish and produce the full
+   screenshot set plus preview.mp4.
+
+This matters for submission: a reviewer pressing back on the first device they open gets thrown
+out of the app.
 
 ## Decisions still open
 
