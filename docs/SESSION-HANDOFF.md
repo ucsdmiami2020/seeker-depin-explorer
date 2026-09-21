@@ -1,4 +1,4 @@
-# Handoff — 20 Sep 2026
+# Handoff — 21 Sep 2026
 
 Where the dApp Store submission stands, and what to do next session.
 
@@ -6,31 +6,25 @@ Where the dApp Store submission stands, and what to do next session.
 
 | Item | State |
 |---|---|
-| Code | v1.3.0 / versionCode 5, committed and pushed. Typecheck + both test suites green. |
+| Code | v1.4.0 / versionCode 6, committed and pushed. Typecheck + both test suites green. |
 | Package id | `app.seekerdepin.explorer` — **permanent** once the app NFT mints. |
 | Repo | https://github.com/ucsdmiami2020/seeker-depin-explorer (public), CI green |
-| PR | [#1](https://github.com/ucsdmiami2020/seeker-depin-explorer/pull/1) — feature graphic only; the rest already landed on `master` |
-| Legal pages | Live: https://ucsdmiami2020.github.io/seeker-depin-legal/ (privacy-policy · terms-of-use · copyright) |
-| APK v1.3.0 | **Built OK** (87 MB). Direct download: https://expo.dev/artifacts/eas/dRRT9nZY95Ux6g-TAfzmb95nyIq6T2DWqwzuHbrLKb4.apk — [build fc445979](https://expo.dev/accounts/ucsdmiami2020s-team/projects/solanoseekerrwaviewer/builds/fc445979-d596-4c9b-be54-ccd0b945a7f6). This is the APK to test, screenshot and submit. |
+| PR | [#1](https://github.com/ucsdmiami2020/seeker-depin-explorer/pull/1), open |
+| Legal pages | Live: https://ucsdmiami2020.github.io/seeker-depin-legal/ |
+| Security review | **Done** — 6 findings, 3 fixed, 3 accepted. See `SECURITY-REVIEW.md`, section "Second review". |
+| Security tab | **Shipped** — data-driven from `src/data/security.ts`, rendering verified |
 | Feature graphic | Done: `store-assets/feature-graphic-1200x1200.png` |
-| Preview video | **Not started** — needs the v1.3.0 APK on the emulator |
-| Store screenshots | **Still the old web captures** with clipped tab labels; retake on the emulator |
+| APK v1.4.0 | **Was building at shutdown** — [build c3b5b17b](https://expo.dev/accounts/ucsdmiami2020s-team/projects/solanoseekerrwaviewer/builds/c3b5b17b-a079-4144-b871-a205023981e6). EAS builds in the cloud, so it finished without this machine. |
+| Store screenshots | Pipeline **proven** at 1080×2400 with legible tab labels, but the final set was never captured — the run was still waiting on the build |
+| Preview video | Flow written (`.maestro/preview-video.yaml`), not yet recorded |
 
-## What did not survive the shutdown
+## Pick up here
 
-The emulator, the Maestro run, the preview server and the background watchers all stopped. The
-Android SDK, the AVD (`seeker_api35`), Maestro (`C:\maestro`) and JDK 17 are installed permanently.
+Everything needed is installed permanently: Android SDK, the `seeker_api35` AVD, Maestro
+(`C:\maestro`), JDK 17. Scratchpad files (downloaded APKs, the mock wallet build, the
+feature-graphic generator) live in Windows temp and may have been cleaned.
 
-Files in the session scratchpad may be cleaned up by Windows:
-`%LOCALAPPDATA%\Temp\claude\...\9b392db4-...\scratchpad\` held the downloaded APK, the mock wallet
-build and the feature-graphic generator. The mock wallet is rebuildable (below); the APK is
-downloadable from EAS; **the feature-graphic generator is not in the repo** — recreate it if the
-device or network counts change.
-
-## Resume here
-
-Full setup detail is in `docs/LOCAL_TESTING.md`. Short version — PowerShell 5.1 has no `&&`, so one
-command per line:
+PowerShell 5.1 has no `&&`, so one command per line:
 
 ```powershell
 $sdk = "$env:LOCALAPPDATA\Android\Sdk"
@@ -40,37 +34,39 @@ $env:Path = "$env:JAVA_HOME\bin;$sdk\platform-tools;$sdk\emulator;C:\maestro\bin
 emulator -avd seeker_api35 -no-snapshot-load -no-window
 ```
 
-Then, in a second terminal:
+Second terminal — get the APK URL from `eas build:list --platform android --limit 1`, download it, then:
 
 ```powershell
-# APK: https://expo.dev/artifacts/eas/dRRT9nZY95Ux6g-TAfzmb95nyIq6T2DWqwzuHbrLKb4.apk
-adb install -r seeker-depin-explorer-v1.3.0.apk
-maestro test .maestro/smoke.yaml
+adb install -r seeker-depin-explorer-v1.4.0.apk
+maestro test .maestro/store-screenshots.yaml
+maestro test .maestro/preview-video.yaml
 ```
 
-### 1. Fix the Maestro selector bug (blocks video and screenshots)
+### Where the output lands
 
-`smoke.yaml` failed with `Element not found: Text matching regex: Helium.*` after 55s. Launch, the
-tour and Skip all worked. The suspect is the search step:
+Maestro writes to its own debug folder, **not** the working directory:
 
-```yaml
-- tapOn:
-    id: "Search devices, tokens, makers…"
+```
+%USERPROFILE%\.maestro\tests\<timestamp>\store-screenshots\takeScreenshot\store-NN-*.png
 ```
 
-`id:` matches a testID/resource-id, and that string is placeholder **text**. Use `maestro studio`
-against the running emulator to read the real selector, then fix both flow files.
+Copy the keepers into `store-assets/`, replacing the web captures whose tab labels are clipped.
+Keep every listing image at 1080×2400 so the aspect ratios match. The video lands as `preview.mp4`
+in the same run folder; the store wants MP4 at 720p or better, 1080p recommended.
 
-### 2. Capture the listing assets
+### Flow quirks, already handled
 
-- `maestro test .maestro/store-screenshots.yaml` → device-resolution PNGs at 1080×2400. Copy the
-  keepers into `store-assets/`, replacing the web captures. Keep one aspect ratio throughout.
-- Preview video: add `startRecording` / `stopRecording` to a flow, or record the emulator during a
-  run. Target MP4, 1080p, 30–60s. `docs/DEMO_SCRIPT.md` has the shot order.
+- The tour left button reads "Skip" only on step 1; from step 2 it is "Back". The flow walks to the
+  last step and taps "Start exploring". Getting this wrong killed an earlier run.
+- The help button carries an accessibility label rather than a testID, so that capture step is
+  `optional`. To make it reliable, add `testID="help-fab"` to `HelpFab` and update both flows —
+  that needs a rebuild.
+- The search field now has `testID="search-input"`; `smoke.yaml` uses it.
 
-### 3. Test the wallet flow
+## Then: test the wallet flow
 
-Rebuild the mock wallet if the scratchpad was cleaned:
+Rebuild the mock wallet if the scratchpad was cleaned. The module is `app`, not `fakewallet` as
+Solana Mobile documents:
 
 ```powershell
 git clone https://github.com/solana-mobile/mock-mwa-wallet
@@ -79,29 +75,29 @@ cd mock-mwa-wallet
 adb install -r app\build\outputs\apk\debug\app-debug.apk
 ```
 
-Note the module is `app`, not `fakewallet` as Solana Mobile's docs claim. Then in the app:
-Wallet → Connect wallet → approve → check the address, balances and "Sign ownership proof".
+Then Wallet → Connect wallet → approve → check the address, balances and "Sign ownership proof".
 
 ## Decisions still open
 
 1. **Publisher wallet must match the Seeker ID.** `ucsdmiami2020.skr` resolves on-chain to
-   `8jTpgM8S6TUiGXD9Cor7wAKA2QF5ufcGUjEHkWmzG6CL`. Check which wallet your publisher portal account
-   is connected to. If it differs, either connect that wallet, move the domain to the publishing
-   wallet, or soften the About copy — the app currently shows the Seeker ID as the publisher
-   identity. **Fix before minting; the wallet cannot be changed afterwards.**
-2. **RPC endpoint.** No EAS variable is set, so builds use the rate-limited public RPC and the
-   Wallet tab can look broken to a reviewer. One command fixes it for every future build:
+   `8jTpgM8S6TUiGXD9Cor7wAKA2QF5ufcGUjEHkWmzG6CL`. Check which wallet the portal account is
+   connected to. If it differs: connect that wallet, move the domain, or soften the About copy.
+   **Fix before minting — the publisher wallet cannot be changed afterwards.**
+2. **RPC endpoint — read before picking one.** `EXPO_PUBLIC_SOLANA_RPC` is **inlined into the
+   JavaScript bundle**, so anyone who unzips the APK can read it. A Helius-style URL with an API key
+   in the path would publish that key to every user. Earlier notes in this repo said otherwise and
+   were wrong. Use an endpoint restricted by domain or bundle id, or a proxy, then:
    ```powershell
    eas env:set --name EXPO_PUBLIC_SOLANA_RPC --value https://your-endpoint --environment production --visibility plaintext
    ```
-   Then rebuild. **The value is inlined into the JavaScript bundle and is readable by anyone who unzips the APK**, so never ship an endpoint whose URL contains an API key. Use one restricted by domain/bundle-id allow-list, or put a proxy in front of it.
-3. **API key.** The publisher API key was pasted into a chat transcript — rotate it in the portal.
-   It is only needed for the CLI submission path, not the portal.
-4. **Keystore backup.** The release key lives only on EAS. `eas credentials` → Android → download.
-   Lose it and the listing can never be updated.
+   and rebuild.
+3. **Rotate the publisher API key** that was pasted into a chat transcript. Only the CLI submission
+   path needs it; the portal does not.
+4. **Back up the keystore.** It exists only on EAS. `eas credentials` → Android → download. Lose it
+   and the listing can never be updated.
 
 ## Then submit
 
-`docs/DAPP_STORE_SUBMISSION.md` is the checklist, already updated for v1.3.0. Portal steps (account,
-KYC/KYB, wallet connection, signing the publisher/app/release mints) all need your keys and cannot be
+`docs/DAPP_STORE_SUBMISSION.md` is the checklist, current for v1.4.0. The portal steps — account,
+KYC/KYB, wallet connection, signing the publisher/app/release mints — need your keys and cannot be
 automated.
