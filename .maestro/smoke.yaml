@@ -23,8 +23,7 @@ appId: app.seekerdepin.explorer
 # Explore: search and category filter
 - assertVisible: "Explore the physical side of Solana"
 - tapOn:
-    id: "Search devices, tokens, makers…"
-    optional: true
+    id: "search-input"
 - inputText: "helium"
 - waitForAnimationToEnd
 - assertVisible:
