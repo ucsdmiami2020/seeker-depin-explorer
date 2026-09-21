@@ -45,7 +45,12 @@ appId: app.seekerdepin.explorer
 - scroll
 - takeScreenshot: store-05-explore-list
 
-# Device detail
+# Device detail. scrollUntilVisible because the list screenshots above scrolled past it.
+- scrollUntilVisible:
+    element:
+      text: "Helium.*"
+    direction: DOWN
+    timeout: 20000
 - tapOn:
     text: "Helium.*"
     index: 0
