@@ -87,7 +87,7 @@ It is not a crash. `adb logcat -b crash` is empty and the main buffer shows
 `AndroidRuntime: VM exiting with result code 0`, so the activity finished cleanly — the back press
 went to the system instead of popping the JavaScript navigation stack.
 
-Evidence: `%USERPROFILE%.maestro	ests6-09-21_083538preview-videoscreenshots`
+Evidence (forward slashes, paste into Explorer): `%USERPROFILE%/.maestro/tests/2026-09-21_083538/preview-video/screenshots/`
 
 **Prime suspect:** `predictiveBackGestureEnabled: true` in `app.json` on API 35. With predictive
 back enabled, Android drives `OnBackInvokedCallback`; if the navigation stack does not register
