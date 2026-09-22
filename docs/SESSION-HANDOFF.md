@@ -1,4 +1,4 @@
-# Handoff — 21 Sep 2026
+# Handoff — 22 Sep 2026
 
 Where the dApp Store submission stands, and what to do next session.
 
@@ -6,7 +6,7 @@ Where the dApp Store submission stands, and what to do next session.
 
 | Item | State |
 |---|---|
-| Code | v1.4.0 / versionCode 6, committed and pushed. Typecheck + both test suites green. |
+| Code | v1.4.1 / versionCode 7, committed and pushed. Typecheck + both test suites green. |
 | Package id | `app.seekerdepin.explorer` — **permanent** once the app NFT mints. |
 | Repo | https://github.com/ucsdmiami2020/seeker-depin-explorer (public), CI green |
 | PR | [#1](https://github.com/ucsdmiami2020/seeker-depin-explorer/pull/1), open |
@@ -14,9 +14,9 @@ Where the dApp Store submission stands, and what to do next session.
 | Security review | **Done** — 6 findings, 3 fixed, 3 accepted. See `SECURITY-REVIEW.md`, section "Second review". |
 | Security tab | **Shipped** — data-driven from `src/data/security.ts`, rendering verified |
 | Feature graphic | Done: `store-assets/feature-graphic-1200x1200.png` |
-| APK v1.4.0 | **Built OK** — [build c3b5b17b](https://expo.dev/accounts/ucsdmiami2020s-team/projects/solanoseekerrwaviewer/builds/c3b5b17b-a079-4144-b871-a205023981e6). EAS builds in the cloud, so it finished without this machine. |
-| Store screenshots | 7 of 14 captured at 1080×2400 (welcome, tour, explore, device detail). The run stops at the back-button bug below. |
-| Preview video | Flow runs and records (preview.mp4, 2.9 MB) but stops early at the same bug |
+| APK v1.4.1 | [build 146c5c78](https://expo.dev/accounts/ucsdmiami2020s-team/projects/solanoseekerrwaviewer/builds/146c5c78-e839-434d-aa36-09fe06eebcb9) — contains the back-button fix. v1.4.0 (c3b5b17b) is the last build **with** the bug; do not ship it. |
+| Store screenshots | 7 of 14 captured from v1.4.0 before the back bug stopped the run. A full capture was queued against v1.4.1 — check `captures-v141` in the scratchpad. |
+| Preview video | Partial recording from v1.4.0; full run queued against v1.4.1 alongside the screenshots |
 
 ## Pick up here
 
@@ -77,34 +77,40 @@ adb install -r app\build\outputs\apk\debug\app-debug.apk
 
 Then Wallet → Connect wallet → approve → check the address, balances and "Sign ownership proof".
 
-## P1 bug found on device: back exits the app
+## P1 bug: back button closed the app — fixed in v1.4.1
 
-Captured on the emulator with v1.4.0. Open any device page from Explore, press the Android back
-button, and the app **closes** instead of returning to the catalog. Both Maestro flows died at the
-same step, and the failure screenshot is the Android home screen.
+**Symptom.** Open any device page from Explore, press the Android back button, and the app closed
+instead of returning to the catalog. Present in every build up to and including v1.4.0.
 
-It is not a crash. `adb logcat -b crash` is empty and the main buffer shows
-`AndroidRuntime: VM exiting with result code 0`, so the activity finished cleanly — the back press
-went to the system instead of popping the JavaScript navigation stack.
+**Confirmed, not inferred.** Reproduced on an API 35 emulator with a flow that presses back exactly
+once: the assertion for the catalog failed and `dumpsys window` showed `mCurrentFocus` had become
+`NexusLauncherActivity`. Not a crash — the crash buffer was empty and logcat showed
+`AndroidRuntime: VM exiting with result code 0`, so the activity was simply finished.
 
-Evidence (forward slashes, paste into Explorer): `%USERPROFILE%/.maestro/tests/2026-09-21_083538/preview-video/screenshots/`
+**Cause.** `android.predictiveBackGestureEnabled: true` writes `android:enableOnBackInvokedCallback`
+into the manifest. Once an app opts in, Android stops calling the legacy `onBackPressed()` path that
+React Native depends on, and unless every layer of the navigation stack registers an
+`OnBackInvokedCallback`, the system default runs and finishes the activity. Expo defaults this flag
+to false; this project had opted in without the support to back it up.
 
-**Prime suspect:** `predictiveBackGestureEnabled: true` in `app.json` on API 35. With predictive
-back enabled, Android drives `OnBackInvokedCallback`; if the navigation stack does not register
-one, the system default (finish the activity) wins. Unverified — do not treat as diagnosed.
+**Fix.** Flag set to false in `app.json` (commit `8c4d9cd`, v1.4.1 / versionCode 7). Recorded as
+finding 15 in `SECURITY-REVIEW.md`.
 
-Next steps, in order:
+**Regression test.** `.maestro/back-navigation.yaml` asserts one back press from a device page lands
+back on the catalog with the tab bar intact. Do not re-enable predictive back without running it.
 
-1. Reproduce by hand: `adb install` v1.4.0, tap a device, press back. Confirm it exits.
-2. Try `predictiveBackGestureEnabled: false` in `app.json`, rebuild, retest. If back now returns to
-   the catalog, that is the cause.
-3. If it still exits, check `react-native-screens` / expo-router predictive-back support for SDK 57
-   and whether `enableOnBackInvokedCallback` is reaching the manifest.
-4. Re-run both Maestro flows once back works; they should then finish and produce the full
-   screenshot set plus preview.mp4.
+**Still to verify:** the fix has been committed and built but not yet confirmed on a device. Run:
 
-This matters for submission: a reviewer pressing back on the first device they open gets thrown
-out of the app.
+```powershell
+maestro test .maestro/back-navigation.yaml
+```
+
+against the v1.4.1 APK. It must pass before the screenshots and video are worth capturing, and
+before anything is submitted.
+
+**Wider lesson.** This shipped through typecheck, unit tests, CI and the web preview untouched.
+Only driving a real Android build caught it. Run `.maestro/smoke.yaml` and
+`.maestro/back-navigation.yaml` against every release APK before submitting.
 
 ## Decisions still open
 
