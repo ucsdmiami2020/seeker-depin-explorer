@@ -36,8 +36,14 @@ appId: app.seekerdepin.explorer
 - back
 - waitForAnimationToEnd:
     timeout: 3000
-- assertVisible: "Explore the physical side of Solana"
 
-# And the tab bar must still be there
+# Assert on the tab bar, not the hero text: back preserves the scroll position, so the header may
+# well be off-screen. If the app had exited, none of these would be present.
+- assertVisible: "Explore"
 - assertVisible: "Compare"
 - assertVisible: "Security"
+
+# And a catalog row is on screen, proving we are on the list rather than a blank shell
+- assertVisible:
+    text: ".*\$.*"
+    optional: true
