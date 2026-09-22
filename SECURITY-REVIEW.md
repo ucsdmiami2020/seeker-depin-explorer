@@ -163,6 +163,22 @@ data at risk; the failure mode is a spinner that does not stop.
 - Dependency audit: three transitive advisories, all reachable only via local CPU or a hostile RPC
   response, re-accepted with rationale.
 
+### 15. Android back button closed the app — Medium (usability/quality) → Fixed in v1.4.1
+
+Opening a device page and pressing the system back button closed the app instead of returning to
+the catalog. Confirmed on an API 35 emulator: after one back press the foreground window was the
+launcher, and logcat showed a clean `VM exiting with result code 0` — no crash, the activity was
+simply finished.
+
+Cause: `android.predictiveBackGestureEnabled: true` writes `android:enableOnBackInvokedCallback`
+into the manifest. Android then stops calling the legacy `onBackPressed()` path, and unless every
+layer of the navigation stack registers an `OnBackInvokedCallback`, the system default runs and
+finishes the activity. Expo defaults this flag to false; this project had opted in.
+
+**Fix:** set it back to false, restoring the back path React Native handles. Predictive back can be
+revisited once expo-router and react-native-screens handle the callback end to end; it should not
+be re-enabled without running `.maestro/back-navigation.yaml`, added as a regression test.
+
 ### Residual risk
 
 The wallet flows have been exercised on an emulator with Solana Mobile's mock wallet, not on Seeker

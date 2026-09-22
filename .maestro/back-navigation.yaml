@@ -1,0 +1,43 @@
+# Regression test for the Android back button.
+#
+#   maestro test .maestro/back-navigation.yaml
+#
+# Opening a device page and pressing back must return to the catalog. In v1.4.0 it closed the app
+# instead, which a dApp Store reviewer would hit within a minute of opening it. This flow isolates
+# a single back press so the failure cannot be blamed on flow timing.
+appId: app.seekerdepin.explorer
+---
+- launchApp:
+    clearState: true
+- waitForAnimationToEnd:
+    timeout: 5000
+
+- tapOn: "Enter Explorer"
+- waitForAnimationToEnd:
+    timeout: 3000
+- tapOn: "Skip"
+- waitForAnimationToEnd:
+    timeout: 2000
+
+# Into a device page
+- scrollUntilVisible:
+    element:
+      text: "Helium.*"
+    direction: DOWN
+    timeout: 20000
+- tapOn:
+    text: "Helium.*"
+    index: 0
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible: "Adoption confidence"
+
+# Exactly one back press, then we must still be inside the app, on the catalog
+- back
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible: "Explore the physical side of Solana"
+
+# And the tab bar must still be there
+- assertVisible: "Compare"
+- assertVisible: "Security"
