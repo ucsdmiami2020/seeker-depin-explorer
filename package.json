@@ -1,6 +1,6 @@
 {
   "name": "seeker-depin-explorer",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "license": "UNLICENSED",
   "main": "index.ts",
   "dependencies": {
