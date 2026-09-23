@@ -1,0 +1,107 @@
+# Records the dApp Store preview video on a real Android emulator.
+#
+#   maestro test .maestro/preview-video.yaml
+#
+# Produces preview.mp4 in Maestro's debug run folder. Target the store spec: MP4, at least 720px,
+# 1080p recommended — the seeker_api35 AVD records at 1080x2400.
+#
+# Maestro has no fixed-sleep command: waitForAnimationToEnd returns as soon as the screen settles,
+# so this runs faster than a human would read it. If the result feels rushed, record the same walk
+# with adb instead and keep Maestro purely as the driver:
+#
+#   adb shell screenrecord --time-limit 60 /sdcard/preview.mp4
+#   maestro test .maestro/store-screenshots.yaml
+#   adb pull /sdcard/preview.mp4
+appId: app.seekerdepin.explorer
+---
+- launchApp:
+    clearState: true
+- waitForAnimationToEnd:
+    timeout: 5000
+- startRecording: preview
+
+# 1. The pitch, straight from the welcome screen
+- waitForAnimationToEnd:
+    timeout: 2500
+- tapOn: "Enter Explorer"
+- waitForAnimationToEnd:
+    timeout: 3000
+
+# 2. The tour explains the app in its own words
+- waitForAnimationToEnd:
+    timeout: 3000
+- tapOn: "Next"
+- waitForAnimationToEnd:
+    timeout: 2500
+- tapOn: "Next"
+- waitForAnimationToEnd:
+    timeout: 3000
+- tapOn: "Next"
+- waitForAnimationToEnd:
+    timeout: 2500
+- tapOn: "Next"
+- waitForAnimationToEnd:
+    timeout: 2500
+- tapOn: "Next"
+- waitForAnimationToEnd:
+    timeout: 3000
+- tapOn: "Start exploring"
+- waitForAnimationToEnd:
+    timeout: 2000
+
+# 3. The catalog: browse, filter, open a device
+- waitForAnimationToEnd:
+    timeout: 2000
+- scroll
+- waitForAnimationToEnd:
+    timeout: 1500
+- scroll
+- waitForAnimationToEnd:
+    timeout: 1500
+- scrollUntilVisible:
+    element:
+      text: "Helium.*"
+    direction: DOWN
+    timeout: 20000
+- tapOn:
+    text: "Helium.*"
+    index: 0
+- waitForAnimationToEnd:
+    timeout: 3000
+- waitForAnimationToEnd:
+    timeout: 2500
+- scroll
+- waitForAnimationToEnd:
+    timeout: 2000
+- scroll
+- waitForAnimationToEnd:
+    timeout: 2000
+- back
+- waitForAnimationToEnd
+
+# 4. Compare and networks
+- tapOn: "Compare"
+- waitForAnimationToEnd
+- waitForAnimationToEnd:
+    timeout: 2500
+- tapOn: "Networks"
+- waitForAnimationToEnd
+- waitForAnimationToEnd:
+    timeout: 2500
+
+# 5. The wallet: the reason this is a phone app
+- tapOn: "Wallet"
+- waitForAnimationToEnd
+- waitForAnimationToEnd:
+    timeout: 3500
+
+# 6. Security posture, for the reviewer watching
+- tapOn: "Security"
+- waitForAnimationToEnd
+- waitForAnimationToEnd:
+    timeout: 3000
+- scroll
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- stopRecording

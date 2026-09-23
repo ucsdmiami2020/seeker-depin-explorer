@@ -3,7 +3,7 @@
 Everything below maps to a documented requirement or a known rejection reason. Tick them in order.
 Reference: [Submit a New App](https://docs.solanamobile.com/dapp-store/submit-new-app) · [Build and Sign an APK](https://docs.solanamobile.com/dapp-store/build-and-sign-an-apk) · [Publisher Policy](https://legal.solanamobile.com/publisher-policy-web)
 
-Current build: **v1.3.0, versionCode 5** (wallet, guided tour and help centre, publisher Seeker ID, Play Solana PSG1).
+Current build: **v1.4.2, versionCode 8** (wallet, guided tour and help centre, publisher Seeker ID, Play Solana PSG1).
 
 ## A. One-time setup
 
@@ -54,11 +54,11 @@ cd android && ./gradlew assembleRelease
 # → android/app/build/outputs/apk/release/app-release.apk
 ```
 
-- [ ] **Set the RPC endpoint in EAS, not in your shell.** EAS cloud builds do not receive environment variables from your terminal, so `EXPO_PUBLIC_SOLANA_RPC=… eas build` silently falls back to the public RPC. Use `eas env:set … --environment production` (above); the `dapp-store` profile in `eas.json` reads the `production` environment. The public endpoints are rate-limited, and a reviewer hitting a 429 sees an app that looks broken.
+- [ ] **Set the RPC endpoint in EAS, not in your shell.** EAS cloud builds do not receive environment variables from your terminal, so `EXPO_PUBLIC_SOLANA_RPC=… eas build` silently falls back to the public RPC. Use `eas env:set … --environment production` (above); the `dapp-store` profile in `eas.json` reads the `production` environment. The public endpoints are rate-limited, and a reviewer hitting a 429 sees an app that looks broken. **The value is inlined into the JavaScript bundle and is readable by anyone who unzips the APK**, so never ship an endpoint whose URL contains an API key. Use one restricted by domain/bundle-id allow-list, or put a proxy in front of it.
 - The two checks below need the Android SDK build-tools (`apksigner`, `aapt`), which EAS does not install on your machine. Without them you can still see the keystore SHA-256 fingerprint in `eas credentials`. In PowerShell, replace `| grep -E "…"` with `| Select-String "package|uses-permission|sdkVersion|targetSdkVersion"`.
 - [ ] Verify it is release-signed with **your** key, not debug:
   `apksigner verify --print-certs app-release.apk` (certificate DN must be yours, not `CN=Android Debug`).
-- [ ] Verify the manifest: `aapt dump badging app-release.apk | grep -E "package|uses-permission|sdkVersion|targetSdkVersion"` — expect `versionCode='5'` (or higher), `targetSdkVersion:'36'`, and still only `INTERNET` + `VIBRATE` (MWA needs no extra permission).
+- [ ] Verify the manifest: `aapt dump badging app-release.apk | grep -E "package|uses-permission|sdkVersion|targetSdkVersion"` — expect `versionCode='8'` (or higher), `targetSdkVersion:'36'`, and still only `INTERNET` + `VIBRATE` (MWA needs no extra permission).
 - [ ] Install on an API 34+ arm64 emulator or a Seeker and run the full device checklist in `HACKATHON.md` — including the wallet flows, which cannot be tested on web.
 
 ## C. Listing assets (in `store-assets/`)

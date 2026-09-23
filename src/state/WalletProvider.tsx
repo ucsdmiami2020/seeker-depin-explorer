@@ -60,14 +60,31 @@ interface WalletState {
 
 const Ctx = createContext<WalletState | null>(null);
 
+/**
+ * Wording for the MWA failures worth explaining. Everything else falls back to a generic line.
+ *
+ * The message on an MWA error originates in whichever app answered the association — potentially
+ * a hostile one impersonating a wallet. Rendering that text verbatim inside our UI would hand it a
+ * phishing surface ("enter your seed phrase to continue"), so foreign strings never reach the screen
+ * outside development.
+ */
+const WALLET_ERRORS: Record<string, string> = {
+  ERROR_WALLET_NOT_FOUND:
+    'No compatible wallet found on this device. Install Phantom, Solflare or Backpack (or use Seed Vault on a Seeker) and try again.',
+  ERROR_ASSOCIATION_CANCELLED: 'Connection cancelled.',
+  ERROR_SESSION_CLOSED: 'The wallet closed the session before it finished.',
+  ERROR_SESSION_TIMEOUT: 'The wallet did not respond in time.',
+  ERROR_AUTHORIZATION_FAILED: 'The wallet declined the request.',
+};
+
 function friendlyError(e: unknown): string {
-  const code = (e as { code?: string })?.code;
-  if (code === 'ERROR_WALLET_NOT_FOUND') {
-    return 'No compatible wallet found on this device. Install Phantom, Solflare or Backpack (or use Seed Vault on a Seeker) and try again.';
+  const code = (e as { code?: string | number })?.code;
+  if (typeof code === 'string' && WALLET_ERRORS[code]) return WALLET_ERRORS[code];
+  if (__DEV__) {
+    const raw = e instanceof Error ? e.message : String(e);
+    return `Something went wrong talking to the wallet. [dev] ${raw.replace(/\s+/g, ' ').slice(0, 200)}`;
   }
-  if (code === 'ERROR_ASSOCIATION_CANCELLED') return 'Connection cancelled.';
-  const message = e instanceof Error ? e.message : String(e);
-  return message || 'Something went wrong talking to the wallet.';
+  return 'Something went wrong talking to the wallet. Please try again.';
 }
 
 export function WalletProvider({ children }: { children: React.ReactNode }) {

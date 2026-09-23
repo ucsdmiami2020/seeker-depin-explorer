@@ -1,0 +1,51 @@
+# Regression test for the Android back button.
+#
+#   maestro test .maestro/back-navigation.yaml
+#
+# Opening a device page and pressing back must return to the catalog. In v1.4.0 it closed the app
+# instead, which a dApp Store reviewer would hit within a minute of opening it. This flow isolates
+# a single back press so the failure cannot be blamed on flow timing.
+appId: app.seekerdepin.explorer
+---
+- launchApp:
+    clearState: true
+- waitForAnimationToEnd:
+    timeout: 5000
+
+- tapOn: "Enter Explorer"
+- waitForAnimationToEnd:
+    timeout: 3000
+- tapOn: "Skip"
+- waitForAnimationToEnd:
+    timeout: 2000
+
+# Into a device page
+- scrollUntilVisible:
+    element:
+      text: "Helium.*"
+    direction: DOWN
+    timeout: 20000
+- tapOn:
+    text: "Helium.*"
+    index: 0
+- waitForAnimationToEnd:
+    timeout: 3000
+# "Price" sits in the card at the top of a device page, so it is visible on short screens too.
+# "Adoption confidence" is further down and falls below the fold at 1080x1920.
+- assertVisible: "Price"
+
+# Exactly one back press, then we must still be inside the app, on the catalog
+- back
+- waitForAnimationToEnd:
+    timeout: 3000
+
+# Assert on the tab bar, not the hero text: back preserves the scroll position, so the header may
+# well be off-screen. If the app had exited, none of these would be present.
+- assertVisible: "Explore"
+- assertVisible: "Compare"
+- assertVisible: "Security"
+
+# The device card we came from is on screen
+- assertVisible:
+    text: "Helium.*"
+    optional: true

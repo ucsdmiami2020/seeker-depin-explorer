@@ -59,8 +59,11 @@ maestro test .maestro/store-screenshots.yaml
 ```
 
 - `smoke.yaml` walks the reviewer path and asserts the screens that cannot be checked on web.
-- `store-screenshots.yaml` writes `store-NN-*.png` at device resolution. Copy the ones you want into
-  `store-assets/` to replace the web captures, whose tab-bar labels were clipped.
+- `store-screenshots.yaml` writes `store-NN-*.png` at device resolution. Maestro puts them in its
+  debug run folder, not the working directory:
+  `%USERPROFILE%.maestro	ests<timestamp>store-screenshots	akeScreenshot`.
+  Copy the ones you want into `store-assets/` to replace the web captures, whose tab-bar labels
+  were clipped.
 - `maestro studio` opens an interactive inspector for writing new flows against the running emulator.
 
 ## Testing the wallet flow with a mock wallet
@@ -78,6 +81,9 @@ adb install -r fakewallet\build\outputs\apk\debug\fakewallet-debug.apk
 
 Then in the app: **Wallet → Connect wallet**, approve in the mock wallet, and the address and balances
 appear. "Sign ownership proof" exercises `signMessages`, which is the only signing this app performs.
+
+Any EXPO_PUBLIC_ value is baked into the bundle in clear text, so use a disclosable endpoint for test
+builds too.
 
 For balances that match a real account, use an emulator image with the Play Store, install Phantom or
 Solflare, and connect a wallet you control. Never use a wallet holding significant funds for testing.

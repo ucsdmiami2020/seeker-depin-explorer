@@ -43,6 +43,10 @@ export default function TabLayout() {
           options={{ title: 'Wallet', tabBarIcon: ({ color, size }) => <Ionicons name="wallet" size={size} color={color} /> }}
         />
         <Tabs.Screen
+          name="security"
+          options={{ title: 'Security', tabBarIcon: ({ color, size }) => <Ionicons name="shield-checkmark" size={size} color={color} /> }}
+        />
+        <Tabs.Screen
           name="about"
           options={{ title: 'About', tabBarIcon: ({ color, size }) => <Ionicons name="information-circle" size={size} color={color} /> }}
         />

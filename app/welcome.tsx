@@ -21,7 +21,17 @@ export default function WelcomeScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
-      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+      {/*
+        The call to action sits OUTSIDE the ScrollView. When it lived inside, a 16:9 phone
+        (1080x1920) cut it off below the fold: the first screen a new user saw had no visible way
+        forward. Pinning it means the button is present on every screen size, and the story above
+        scrolls behind it.
+      */}
+      <ScrollView
+        style={styles.scroll}
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
+      >
         <View style={styles.headerRow}>
           <View style={styles.mark}>
             <Ionicons name="pulse" size={18} color={colors.bg} />
@@ -67,10 +77,13 @@ export default function WelcomeScreen() {
             </View>
           ))}
         </View>
+      </ScrollView>
 
+      <View style={styles.footer}>
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="Enter Explorer"
+          testID="enter-explorer"
           onPress={enterExplorer}
           style={({ pressed }) => [styles.cta, pressed && styles.ctaPressed]}
         >
@@ -78,14 +91,15 @@ export default function WelcomeScreen() {
           <Ionicons name="arrow-forward" size={20} color={colors.bg} />
         </Pressable>
         <Text style={styles.trust}>No account. No wallet required. Catalog data stays on your device.</Text>
-      </ScrollView>
+      </View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: colors.bg },
-  content: { flexGrow: 1, paddingHorizontal: spacing.xl, paddingVertical: spacing.lg },
+  scroll: { flex: 1 },
+  content: { paddingHorizontal: spacing.xl, paddingTop: spacing.lg, paddingBottom: spacing.lg },
   headerRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
   mark: {
     width: 32,
@@ -142,9 +156,16 @@ const styles = StyleSheet.create({
   pillarCopy: { flex: 1 },
   pillarTitle: { ...font.subtitle, color: colors.text },
   pillarBody: { ...font.caption, color: colors.textMuted, lineHeight: 18, marginTop: 2 },
+  footer: {
+    paddingHorizontal: spacing.xl,
+    paddingTop: spacing.md,
+    paddingBottom: spacing.md,
+    backgroundColor: colors.bg,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: colors.cardBorder,
+  },
   cta: {
     minHeight: 52,
-    marginTop: spacing.xxl,
     borderRadius: radius.md,
     backgroundColor: colors.solanaGreen,
     flexDirection: 'row',
@@ -154,5 +175,5 @@ const styles = StyleSheet.create({
   },
   ctaPressed: { opacity: 0.78, transform: [{ scale: 0.99 }] },
   ctaText: { color: colors.bg, fontSize: 15, fontWeight: '800' },
-  trust: { ...font.caption, color: colors.textFaint, textAlign: 'center', marginTop: spacing.md, lineHeight: 18 },
+  trust: { ...font.caption, color: colors.textFaint, textAlign: 'center', marginTop: spacing.sm, lineHeight: 18 },
 });

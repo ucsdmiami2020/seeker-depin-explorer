@@ -74,6 +74,8 @@ export default function Explore() {
       <View style={styles.searchBox}>
         <Ionicons name="search" size={18} color={colors.textMuted} />
         <TextInput
+          testID="search-input"
+          accessibilityLabel="Search devices, tokens and makers"
           placeholder="Search devices, tokens, makers…"
           placeholderTextColor={colors.textFaint}
           value={query}

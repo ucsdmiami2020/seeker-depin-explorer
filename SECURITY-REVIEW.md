@@ -92,3 +92,94 @@ v1.1.0 adds Mobile Wallet Adapter and read-only RPC access. This changes the att
   - **`stream-json` ≤3.4.0** (GHSA-528h-pc64-c93x, quadratic parsing of deeply nested JSON → event-loop DoS), reached via `@solana/web3.js → jayson`. It can only be triggered by the JSON an RPC endpoint returns, so the threat is a hostile or compromised RPC provider, and the impact is bounded to CPU time in the app's own process — there is no key material or user data to lose. Mitigations already in place: the endpoint is a fixed HTTPS default or a build-time value validated by `isValidRpcUrl`, never user- or link-supplied. **Accepted; re-check on each `@solana/web3.js` upgrade.**
 - **Permissions unchanged.** MWA works over intents and local sockets; the manifest still carries only INTERNET and VIBRATE.
 - **Not yet verified on hardware.** The MWA flow has not been exercised on a device or emulator in this environment (no Android SDK/JDK available). Typecheck, unit tests and the web build pass. Run the checklist in `HACKATHON.md` on a Seeker or an Android emulator with Phantom before submitting or shipping.
+
+## Second review — v1.4.0 (versionCode 6), 2026-09-21
+
+Full re-read of `app/` and `src/` after the wallet, tour and catalog work, plus the build and CI
+configuration. Six findings: three fixed in this release, three accepted and documented. The
+user-facing summary of the resulting posture is the in-app Security tab (`src/data/security.ts`),
+which is deliberately data-driven so a removed control cannot leave a stale claim behind.
+
+### 10. Build-time RPC override is embedded in the shipped bundle — Medium, guidance
+
+`EXPO_PUBLIC_SOLANA_RPC` is read through `process.env` and, like every `EXPO_PUBLIC_*` variable,
+Expo **inlines it into the JavaScript bundle at build time**. Anyone who unzips the APK can read it.
+
+That is harmless for the public endpoints, but it makes the obvious next step dangerous: a Helius or
+QuickNode URL usually carries an API key in the path, and shipping one here publishes that key to
+every user. Earlier guidance in this repository recommended exactly that and was wrong.
+
+**Guidance:** use an endpoint that is safe to disclose — one restricted by domain/bundle-id
+allow-list, rate-limited, and read-only — or put a minimal proxy in front and ship the proxy URL.
+Never ship a bearer-style key. `isValidRpcUrl` still enforces HTTPS with no embedded credentials,
+which blocks the `https://user:pass@host` form but cannot stop a key in the path.
+
+### 11. Wallet error text rendered verbatim — Low → Fixed
+
+`friendlyError` fell back to `e.message` for unknown failures. On MWA, that message originates in
+whichever app answered the association — which is not necessarily a real wallet, since any app can
+register the intent. A hostile app could therefore render arbitrary text inside our trusted UI
+("Enter your recovery phrase to continue"), which is a credible phishing surface.
+
+**Fix:** known error codes map to our own wording; anything else shows a fixed generic line. Foreign
+strings appear only under `__DEV__`, whitespace-collapsed and truncated to 200 characters.
+
+### 12. CI workflow relied on the default token scope — Low → Fixed
+
+`.github/workflows/ci.yml` declared no `permissions` block, so the job ran with whatever the
+repository default grants. The workflow only checks out code and runs tests.
+
+**Fix:** `permissions: contents: read` at workflow level.
+
+### 13. Ownership proof is not bound to a session — Low, accepted
+
+The signed statement covers the address, cluster and an ISO timestamp, but carries no server nonce
+and no domain binding, so a captured signature is replayable and is not safe as a login credential.
+Today it only demonstrates control of an address to the person holding the phone, which is what the
+UI claims and no more.
+
+**Accepted.** Before any feature treats it as authentication — the planned operator-verified
+reviews would — move to SIWS-style binding: server-issued nonce, domain, issued-at and expiry, with
+the server verifying and burning the nonce.
+
+### 14. RPC reads are unbounded and untimed — Low, accepted
+
+`fetchTokenHoldings` asks for every SPL and Token-2022 account the address owns and awaits both
+requests with no timeout. A wallet holding thousands of dust accounts, or a hostile RPC returning an
+oversized response, degrades to a slow or hung Wallet tab. There is no memory-safety issue and no
+data at risk; the failure mode is a spinner that does not stop.
+
+**Accepted for this release.** Worth adding: an `AbortController`-based fetch timeout on the
+`Connection`, and a cap on rendered holdings.
+
+### Verification performed
+
+- `npx tsc --noEmit` clean; unit tests green (11 link cases, 39 catalog URLs, 13 mints, 14 networks).
+- Grep sweep for `eval`, `dangerouslySetInnerHTML`, `innerHTML`, WebView, `child_process` and raw
+  `fetch` in app code: no hits. The only `Linking.openURL` call sits behind the allow-list on the web
+  path, and no direct network calls exist outside `@solana/web3.js`.
+- Manifest expectations unchanged: `INTERNET` + `VIBRATE`, `allowBackup=false`,
+  `usesCleartextTraffic=false`.
+- Dependency audit: three transitive advisories, all reachable only via local CPU or a hostile RPC
+  response, re-accepted with rationale.
+
+### 15. Android back button closed the app — Medium (usability/quality) → Fixed in v1.4.1
+
+Opening a device page and pressing the system back button closed the app instead of returning to
+the catalog. Confirmed on an API 35 emulator: after one back press the foreground window was the
+launcher, and logcat showed a clean `VM exiting with result code 0` — no crash, the activity was
+simply finished.
+
+Cause: `android.predictiveBackGestureEnabled: true` writes `android:enableOnBackInvokedCallback`
+into the manifest. Android then stops calling the legacy `onBackPressed()` path, and unless every
+layer of the navigation stack registers an `OnBackInvokedCallback`, the system default runs and
+finishes the activity. Expo defaults this flag to false; this project had opted in.
+
+**Fix:** set it back to false, restoring the back path React Native handles. Predictive back can be
+revisited once expo-router and react-native-screens handle the callback end to end; it should not
+be re-enabled without running `.maestro/back-navigation.yaml`, added as a regression test.
+
+### Residual risk
+
+The wallet flows have been exercised on an emulator with Solana Mobile's mock wallet, not on Seeker
+hardware, and no independent penetration test has been commissioned. Both are stated in the app.

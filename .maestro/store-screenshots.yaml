@@ -2,14 +2,17 @@
 #
 #   maestro test .maestro/store-screenshots.yaml
 #
-# Output lands next to the flow as store-NN-*.png (1080x2340 on a Pixel 7 AVD).
+# Output lands in the working directory as store-NN-*.png (1080x2400 on the seeker_api35 AVD).
 # Replaces the old web-browser captures, whose tab-bar labels were clipped.
+#
+# Note on the tour: the left button reads "Skip" only on step 1. From step 2 it becomes "Back",
+# so the flow walks to the last step and finishes with "Start exploring".
 appId: app.seekerdepin.explorer
 ---
 - launchApp:
-    clearState: false
+    clearState: true
 - waitForAnimationToEnd:
-    timeout: 4000
+    timeout: 5000
 
 # Welcome screen, before the tour opens
 - takeScreenshot: store-01-welcome
@@ -26,7 +29,13 @@ appId: app.seekerdepin.explorer
 - waitForAnimationToEnd
 - assertVisible: "Adoption confidence, not hype"
 - takeScreenshot: store-03-tour-adoption
-- tapOn: "Skip"
+- tapOn: "Next"
+- waitForAnimationToEnd
+- tapOn: "Next"
+- waitForAnimationToEnd
+- tapOn: "Next"
+- waitForAnimationToEnd
+- tapOn: "Start exploring"
 - waitForAnimationToEnd:
     timeout: 2000
 
@@ -36,7 +45,12 @@ appId: app.seekerdepin.explorer
 - scroll
 - takeScreenshot: store-05-explore-list
 
-# Device detail
+# Device detail. scrollUntilVisible because the list screenshots above scrolled past it.
+- scrollUntilVisible:
+    element:
+      text: "Helium.*"
+    direction: DOWN
+    timeout: 20000
 - tapOn:
     text: "Helium.*"
     index: 0
@@ -47,6 +61,7 @@ appId: app.seekerdepin.explorer
 - scroll
 - takeScreenshot: store-07-device-earn
 - back
+- waitForAnimationToEnd
 
 # Compare
 - tapOn: "Compare"
@@ -63,16 +78,25 @@ appId: app.seekerdepin.explorer
 - waitForAnimationToEnd
 - takeScreenshot: store-10-wallet
 
-# Help centre reachable from every tab
-- tapOn:
-    id: "Help and app guide"
+# Security posture, aimed at reviewers and programme managers
+- tapOn: "Security"
 - waitForAnimationToEnd:
     timeout: 2000
-- assertVisible: "How this app works"
-- takeScreenshot: store-11-help
-- back
+- assertVisible: "Private keys held"
+- takeScreenshot: store-11-security
+- scroll
+- takeScreenshot: store-12-security-controls
 
-# About and legal
+# About, including the publisher Seeker ID
 - tapOn: "About"
 - waitForAnimationToEnd
-- takeScreenshot: store-12-about
+- takeScreenshot: store-13-about
+
+# Help centre, reachable from every tab. The button carries an accessibility label rather than a
+# testID, so this step is optional: a miss must not cost the whole capture run.
+- tapOn:
+    id: "Help and app guide"
+    optional: true
+- waitForAnimationToEnd:
+    timeout: 2000
+- takeScreenshot: store-14-help

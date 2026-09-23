@@ -52,7 +52,7 @@ EAS cloud builds do **not** receive variables from your shell. Store the endpoin
 eas env:set --name EXPO_PUBLIC_SOLANA_RPC --value https://your-endpoint.example.com --environment production --visibility plaintext
 ```
 
-Non-HTTPS endpoints, or URLs with embedded credentials, are rejected (`src/lib/solana.ts`).
+Non-HTTPS endpoints, or URLs with embedded credentials, are rejected (`src/lib/solana.ts`). **The value is inlined into the JavaScript bundle and is readable by anyone who unzips the APK**, so never ship an endpoint whose URL contains an API key. Use one restricted by domain/bundle-id allow-list, or put a proxy in front of it.
 
 ## Project layout
 
