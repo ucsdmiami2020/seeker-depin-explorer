@@ -30,7 +30,9 @@ appId: app.seekerdepin.explorer
     index: 0
 - waitForAnimationToEnd:
     timeout: 3000
-- assertVisible: "Adoption confidence"
+# "Price" sits in the card at the top of a device page, so it is visible on short screens too.
+# "Adoption confidence" is further down and falls below the fold at 1080x1920.
+- assertVisible: "Price"
 
 # Exactly one back press, then we must still be inside the app, on the catalog
 - back
@@ -43,7 +45,7 @@ appId: app.seekerdepin.explorer
 - assertVisible: "Compare"
 - assertVisible: "Security"
 
-# And a catalog row is on screen, proving we are on the list rather than a blank shell
+# The device card we came from is on screen
 - assertVisible:
-    text: ".*\$.*"
+    text: "Helium.*"
     optional: true
